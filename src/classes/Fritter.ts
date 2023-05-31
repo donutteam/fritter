@@ -57,6 +57,12 @@ export class Fritter
 
 				await currentMiddleware(fritterContext, executeMiddleware);
 			}
+			else
+			{
+				response.statusCode = 404;
+				response.setHeader("Content-Type", "text/plain");
+				response.end("Not found.");
+			}
 		}
 
 		try
