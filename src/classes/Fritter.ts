@@ -3,6 +3,7 @@
 //
 
 import http from "node:http";
+import https from "node:https";
 
 import { FritterContext } from "./FritterContext.js";
 
@@ -17,22 +18,28 @@ import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js
  */
 export class Fritter
 {
+
+	/**
+	 * The middleware stack.
+	 */
+	private readonly middlewareStack : FritterMiddlewareFunction[];
+
 	/**
 	 * The underlying Node.js HTTP server.
 	 */
 	private httpServer : http.Server;
 
 	/**
-	 * The middleware stack.
+	 * An HTTPS server.
 	 */
-	private middlewareStack : FritterMiddlewareFunction[];
+	private httpsServer : https.Server;
 
 	/**
 	 * Constructs a new Fritter instance.
 	 */
 	constructor()
 	{
-		this.httpServer = http.createServer(this.handleRequest);
+		this.middlewareStack = [];
 	}
 
 	/**
@@ -80,12 +87,14 @@ export class Fritter
 	}
 
 	/**
-	 * Starts the server on the specified port.
+	 * Starts an HTTP server on the specified port.
 	 *
 	 * @param port The port to listen on.
 	 */
-	public async start(port : number) : Promise<void>
+	public async startHttp(port : number) : Promise<void>
 	{
+		this.httpServer = http.createServer(this.handleRequest.bind(this));
+
 		return new Promise((resolve, reject) =>
 		{
 			this.httpServer.listen(port, () => resolve());
@@ -95,13 +104,66 @@ export class Fritter
 	}
 
 	/**
-	 * Stops the server.
+	 * Starts an HTTPS server on the specified port.
+	 *
+	 * @param port
+	 * @param options
 	 */
-	public async stop() : Promise<void>
+	public async startHttps(port : number, options : https.ServerOptions) : Promise<void>
+	{
+		this.httpsServer = https.createServer(options, this.handleRequest.bind(this));
+
+		return new Promise((resolve, reject) =>
+		{
+			this.httpsServer.listen(port, () => resolve());
+
+			this.httpsServer.on("error", (error) => reject(error));
+		});
+	}
+
+	/**
+	 * Stops the HTTP server.
+	 */
+	public async stopHttp() : Promise<void>
 	{
 		return new Promise((resolve, reject) =>
 		{
+			if (this.httpServer == null)
+			{
+				resolve();
+
+				return;
+			}
+
 			this.httpServer.close((error) =>
+			{
+				if (error)
+				{
+					reject(error);
+				}
+				else
+				{
+					resolve();
+				}
+			});
+		});
+	}
+
+	/**
+	 * Stops the HTTPS server.
+	 */
+	public async stopHttps() : Promise<void>
+	{
+		return new Promise((resolve, reject) =>
+		{
+			if (this.httpsServer == null)
+			{
+				resolve();
+
+				return;
+			}
+
+			this.httpsServer.close((error) =>
 			{
 				if (error)
 				{
