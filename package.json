@@ -1,0 +1,26 @@
+{
+  "name": "@donutteam/fritter",
+  "version": "1.0.0",
+  "description": "A web framework.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "npx rimraf lib && npx tsc",
+    "lint": "eslint . -c ./.eslintrc.cjs",
+    "lint-fix": "eslint . -c ./.eslintrc.cjs --fix",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "server"
+  ],
+  "author": "Donut Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@donutteam/eslint-config": "^2.0.0",
+    "@types/node": "^20.2.5",
+    "eslint": "^8.41.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.0.4"
+  }
+}

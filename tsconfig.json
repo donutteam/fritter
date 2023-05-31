@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"declaration": true,
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"outDir": "./build",
+		"rootDir": "./src",
+		"sourceMap": true,
+		"target": "ESNext"
+	},
+	"exclude": [],
+	"include": [
+		"./src/**/*.js",
+		"./src/**/*.ts"
+	]
+}
