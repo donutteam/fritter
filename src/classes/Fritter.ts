@@ -14,10 +14,25 @@ import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js
 //
 
 /**
+ * Options for a Fritter instance.
+ */
+export interface FritterOptions
+{
+	/**
+	 * Whether this Fritter instance is proxied to.
+	 */
+	isProxied? : boolean;
+}
+
+/**
  * A web server.
  */
 export class Fritter
 {
+	/**
+	 * The options for this Fritter instance.
+	 */
+	public readonly options : FritterOptions;
 
 	/**
 	 * The middleware stack.
@@ -37,8 +52,20 @@ export class Fritter
 	/**
 	 * Constructs a new Fritter instance.
 	 */
-	constructor()
+	constructor(options : FritterOptions = {})
 	{
+		//
+		// Default Options
+		//
+
+		options.isProxied ??= false;
+
+		//
+		// Initialise Class
+		//
+
+		this.options = options;
+
 		this.middlewareStack = [];
 	}
 
