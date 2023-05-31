@@ -4,9 +4,9 @@
 
 import http from "node:http";
 
+import type { Fritter } from "./Fritter.js";
 import { FritterRequest } from "./FritterRequest.js";
 import { FritterResponse } from "./FritterResponse.js";
-import { Fritter } from "./Fritter.js";
 
 //
 // Class
@@ -60,9 +60,9 @@ export class FritterContext
 	{
 		this.fritter = fritter;
 
-		this.fritterRequest = new FritterRequest(request);
+		this.fritterRequest = new FritterRequest(this.fritter, request);
 
-		this.fritterResponse = new FritterResponse(response);
+		this.fritterResponse = new FritterResponse(this.fritter, response);
 
 		this.nodeRequest = request;
 

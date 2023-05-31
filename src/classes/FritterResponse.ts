@@ -4,6 +4,8 @@
 
 import http from "node:http";
 
+import type { Fritter } from "./Fritter.js";
+
 //
 // Class
 //
@@ -14,6 +16,11 @@ import http from "node:http";
 export class FritterResponse
 {
 	/**
+	 * The Fritter instance that created this request.
+	 */
+	private fritter : Fritter;
+
+	/**
 	 * The raw Node.js HTTP response.
 	 */
 	private nodeResponse : http.ServerResponse;
@@ -21,10 +28,17 @@ export class FritterResponse
 	/**
 	 * Constructs a new Fritter response using the given Node.js HTTP response.
 	 *
+	 * @param fritter The Fritter instance that created this request.
 	 * @param response A Node.js HTTP response.
 	 */
-	constructor(response : http.ServerResponse)
+	constructor(fritter : Fritter, response : http.ServerResponse)
 	{
+		//
+		// Store Arguments
+		//
+
+		this.fritter = fritter;
+
 		this.nodeResponse = response;
 	}
 }
