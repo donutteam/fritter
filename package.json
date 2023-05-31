@@ -17,6 +17,9 @@
   "author": "Donut Team",
   "license": "MIT",
   "type": "module",
+  "dependencies": {
+    "source-map-support": "^0.5.21"
+  },
   "devDependencies": {
     "@donutteam/eslint-config": "^2.0.0",
     "@types/node": "^20.2.5",
