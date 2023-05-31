@@ -74,8 +74,8 @@ export class Fritter
 			console.error("[Fritter] Error while executing middleware stack:", error);
 
 			response.statusCode = 500;
-
-			response.end("Internal Server Error");
+			response.setHeader("Content-Type", "text/plain");
+			response.end("Internal server error.");
 		}
 	}
 
