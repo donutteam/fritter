@@ -18,12 +18,12 @@ export class FritterResponse
 	/**
 	 * The Fritter instance that created this request.
 	 */
-	private fritter : Fritter;
+	public fritter : Fritter;
 
 	/**
 	 * The raw Node.js HTTP response.
 	 */
-	private nodeResponse : http.ServerResponse;
+	public nodeResponse : http.ServerResponse;
 
 	/**
 	 * Constructs a new Fritter response using the given Node.js HTTP response.

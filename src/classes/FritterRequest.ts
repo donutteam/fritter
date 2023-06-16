@@ -3,6 +3,7 @@
 //
 
 import http from "node:http";
+import type { TLSSocket } from "node:tls";
 
 import type { Fritter } from "./Fritter.js";
 
@@ -20,12 +21,12 @@ export class FritterRequest
 	/**
 	 * The Fritter instance that created this request.
 	 */
-	private fritter : Fritter;
+	public fritter : Fritter;
 
 	/**
 	 * The raw Node.js HTTP request.
 	 */
-	private nodeRequest : http.IncomingMessage;
+	public nodeRequest : http.IncomingMessage;
 
 	/**
 	 * Constructs a new Fritter request using the given Node.js HTTP request.
@@ -94,13 +95,13 @@ export class FritterRequest
 
 	#initialiseHttpMethod() : HTTPMethod
 	{
-		return this.nodeRequest.method.toUpperCase() as HTTPMethod;
+		return (this.nodeRequest.method as string).toUpperCase() as HTTPMethod;
 	}
 
 	/**
 	 * The host of the request.
 	 */
-	public get host() : string
+	public get host() : string | null
 	{
 		if (this.#host === undefined)
 		{
@@ -110,9 +111,9 @@ export class FritterRequest
 		return this.#host;
 	}
 
-	#host : string;
+	#host : string | null;
 
-	#initialiseHost() : string
+	#initialiseHost() : string | null
 	{
 		return this.fritter.options.isProxied
 			? (this.getHeaderValue("X-Forwarded-Host") ?? this.getHeaderValue("Host"))
@@ -136,9 +137,7 @@ export class FritterRequest
 
 	#initialiseProtocol() : "http" | "https"
 	{
-		const isEncryptedSocket = this.nodeRequest.socket.hasOwnProperty("encrypted") && (this.nodeRequest.socket as any).encrypted;
-
-		let protocol : "http" | "https";
+		const isEncryptedSocket = Object.hasOwn(this.nodeRequest.socket, "encrypted") && (this.nodeRequest.socket as TLSSocket).encrypted;
 
 		if (isEncryptedSocket)
 		{
@@ -154,7 +153,12 @@ export class FritterRequest
 
 			if (forwardedProtocolHeader != null)
 			{
-				return forwardedProtocolHeader.split(/\s*,\s*/, 1)[0].toLowerCase() as "http" | "https";
+				const components = forwardedProtocolHeader.split(/\s*,\s*/);
+
+				if (components[0] != null)
+				{
+					return components[0].toLowerCase() as "http" | "https";
+				}
 			}
 		}
 
@@ -178,7 +182,7 @@ export class FritterRequest
 
 	#initialiseUrl() : URL
 	{
-		return new URL(this.nodeRequest.url, this.protocol + "://" + this.getHeaderValue("Host"));
+		return new URL(this.nodeRequest.url as string, this.protocol + "://" + this.getHeaderValue("Host"));
 	}
 
 	//
@@ -191,13 +195,13 @@ export class FritterRequest
 	 * @param headerName The name of the header to get the value of. This is case-insensitive.
 	 * @returns The first value of the given header, or null if the header does not exist.
 	 */
-	public getHeaderValue(headerName : string) : string
+	public getHeaderValue(headerName : string) : string | null
 	{
 		const headerValue = this.nodeRequest.headers[headerName.toLowerCase()];
 
 		if (Array.isArray(headerValue))
 		{
-			if (headerValue.length === 0)
+			if (headerValue[0] == null)
 			{
 				return null;
 			}

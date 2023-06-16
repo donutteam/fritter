@@ -85,11 +85,11 @@ export class Fritter
 		{
 			currentIndex += 1;
 
-			if (currentIndex < this.middlewareStack.length)
-			{
-				const currentMiddleware = this.middlewareStack[currentIndex];
+			const nextMiddleware = this.middlewareStack[currentIndex];
 
-				await currentMiddleware(fritterContext, executeMiddleware);
+			if (nextMiddleware != null)
+			{
+				await nextMiddleware(fritterContext, executeMiddleware);
 			}
 			else
 			{
@@ -97,7 +97,7 @@ export class Fritter
 				response.setHeader("Content-Type", "text/plain");
 				response.end("Not found.");
 			}
-		}
+		};
 
 		try
 		{
