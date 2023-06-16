@@ -1,5 +1,5 @@
 {
-  "name": "@donutteam/fritter",
+  "name": "@fritter/core",
   "version": "1.0.0",
   "description": "A web framework.",
   "main": "./lib/index.js",
