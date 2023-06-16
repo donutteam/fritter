@@ -91,6 +91,11 @@ export class FritterRequest
 		return this.#httpMethod;
 	}
 
+	public set httpMethod(method : HTTPMethod)
+	{
+		this.#httpMethod = method;
+	}
+
 	#httpMethod : HTTPMethod;
 
 	#initialiseHttpMethod() : HTTPMethod
@@ -178,6 +183,11 @@ export class FritterRequest
 		return this.#url;
 	}
 
+	public set url(url : URL)
+	{
+		this.#url = url;
+	}
+
 	#url : URL;
 
 	#initialiseUrl() : URL
@@ -197,7 +207,26 @@ export class FritterRequest
 	 */
 	public getHeaderValue(headerName : string) : string | null
 	{
-		const headerValue = this.nodeRequest.headers[headerName.toLowerCase()];
+		//
+		// Convert Header Name to Lowercase
+		//
+
+		headerName = headerName.toLowerCase();
+
+		//
+		// Special Case for Referrer
+		//
+
+		if (headerName === "referrer")
+		{
+			headerName = "referer";
+		}
+
+		//
+		// Get Header Value
+		//
+
+		const headerValue = this.nodeRequest.headers[headerName];
 
 		if (Array.isArray(headerValue))
 		{
