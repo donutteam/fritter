@@ -41,6 +41,12 @@ export class FritterRequest
 	/** Internal storage for the httpMethod property. */
 	#httpMethod : HTTPMethod;
 
+	/** Internal storage for the ip property. */
+	#ip : string;
+
+	/** Internal storage for the ips property. */
+	#ips : string[];
+
 	/** Internal storage for the host property. */
 	#host : string | null;
 
@@ -244,9 +250,43 @@ export class FritterRequest
 		return this.getUrl().href;
 	}
 
-	// TODO: getIp
+	/** Gets the IP address of the request. */
+	public getIp() : string
+	{
+		if (this.#ip === undefined)
+		{
+			this.#ip = this.getIps()[0] ?? "";
+		}
 
-	// TODO: getIps
+		return this.#ip;
+	}
+
+	/** Gets the IP address chain of the request, starting with the client IP. */
+	public getIps() : string[]
+	{
+		if (this.#ips === undefined)
+		{
+			if (this.fritter.options.trustProxyHeaders)
+			{
+				const forwardedForHeader = this.getHeaderValue(this.fritter.options.proxyIpHeaderName ?? "X-Forwarded-For");
+
+				if (forwardedForHeader != null)
+				{
+					this.#ips = forwardedForHeader.split(/\s*,\s*/).map(ip => ip.trim());
+				}
+			}
+		}
+
+		if (this.#ips === undefined)
+		{
+			this.#ips =
+				[
+					this.nodeRequest.socket.remoteAddress ?? "",
+				];
+		}
+
+		return this.#ips;
+	}
 
 	/** Gets the origin of the request. */
 	public getOrigin() : string | null
@@ -372,7 +412,7 @@ export class FritterRequest
 	{
 		const method = this.getHttpMethod();
 
-		return ["GET", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE"].includes(method);
+		return [ "GET", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE" ].includes(method);
 	}
 
 	/** Returns true if the request is secure. */

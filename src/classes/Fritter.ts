@@ -18,6 +18,9 @@ import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js
  */
 export interface FritterOptions
 {
+	/** The name of the header containing one or more IP addresses of proxies. */
+	proxyIpHeaderName? : string;
+
 	/** The amount of segments in the hostname that are considered the base domain. */
 	subdomainOffset? : number;
 
@@ -104,7 +107,7 @@ export class Fritter
 		{
 			await executeMiddleware();
 		}
-		catch(error)
+		catch (error)
 		{
 			console.error("[Fritter] Error while executing middleware stack:", error);
 
