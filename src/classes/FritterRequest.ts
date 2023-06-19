@@ -9,6 +9,7 @@ import type tls from "node:tls";
 import accepts from "accepts";
 import contentType from "content-type";
 import fresh from "fresh";
+import typeIs from "type-is";
 
 import type { Fritter } from "./Fritter.js";
 
@@ -122,6 +123,33 @@ export class FritterRequest
 		}
 
 		return this.#contentLength;
+	}
+
+	/** Gets the content type of the request. */
+	public getContentType() : string | null
+	{
+		const contentTypeHeader = this.getHeaderValue("Content-Type");
+
+		if (contentTypeHeader == null)
+		{
+			return null;
+		}
+
+		const parsedContentType = contentType.parse(this.nodeRequest);
+
+		return parsedContentType.type;
+	}
+
+	/**
+	 * If the request has no body, returns null.
+	 *
+	 * If the request has a body but is none of the types specified, returns false.
+	 *
+	 * Otherwise, returns the type of the request body.
+	 */
+	public getFirstMatchingType(types : string[]) : string | false | null
+	{
+		return typeIs(this.nodeRequest, ...types);
 	}
 
 	/**
@@ -255,14 +283,14 @@ export class FritterRequest
 	{
 		if (this.#ip === undefined)
 		{
-			this.#ip = this.getIps()[0] ?? "";
+			this.#ip = this.getIpChain()[0] ?? "";
 		}
 
 		return this.#ip;
 	}
 
 	/** Gets the IP address chain of the request, starting with the client IP. */
-	public getIps() : string[]
+	public getIpChain() : string[]
 	{
 		if (this.#ips === undefined)
 		{
@@ -387,6 +415,12 @@ export class FritterRequest
 		return this.#url;
 	}
 
+	/** Returns true if the request has a body. */
+	public hasBody() : boolean
+	{
+		return typeIs.hasBody(this.nodeRequest);
+	}
+
 	/** Returns true if the client has an up-to-date copy of the resource. */
 	public isFresh() : boolean
 	{
@@ -445,7 +479,11 @@ export class FritterRequest
 		this.#host = value;
 	}
 
-	// TODO: setIp
+	/** Sets the IP address of the request. */
+	public setIp(value : string) : void
+	{
+		this.#ip = value;
+	}
 
 	/** Sets the protocol of the request. */
 	public setProtocol(protocol : FritterRequestProtocol) : void
