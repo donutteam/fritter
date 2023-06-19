@@ -19,9 +19,9 @@ import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js
 export interface FritterOptions
 {
 	/**
-	 * Whether this Fritter instance is proxied to.
+	 * Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers.
 	 */
-	isProxied? : boolean;
+	trustProxyHeaders? : boolean;
 }
 
 /**
@@ -58,7 +58,7 @@ export class Fritter
 		// Default Options
 		//
 
-		options.isProxied ??= false;
+		options.trustProxyHeaders ??= false;
 
 		//
 		// Initialise Class

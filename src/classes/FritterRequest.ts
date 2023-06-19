@@ -120,7 +120,7 @@ export class FritterRequest
 
 	#initialiseHost() : string | null
 	{
-		return this.fritter.options.isProxied
+		return this.fritter.options.trustProxyHeaders
 			? (this.getHeaderValue("X-Forwarded-Host") ?? this.getHeaderValue("Host"))
 			: this.getHeaderValue("Host");
 	}
@@ -148,7 +148,7 @@ export class FritterRequest
 		{
 			return "https";
 		}
-		else if (!this.fritter.options.isProxied)
+		else if (!this.fritter.options.trustProxyHeaders)
 		{
 			return "http";
 		}
