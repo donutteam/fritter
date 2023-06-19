@@ -18,9 +18,10 @@ import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js
  */
 export interface FritterOptions
 {
-	/**
-	 * Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers.
-	 */
+	/** The amount of segments in the hostname that are considered the base domain. */
+	subdomainOffset? : number;
+
+	/** Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers. */
 	trustProxyHeaders? : boolean;
 }
 

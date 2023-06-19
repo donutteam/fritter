@@ -22,24 +22,16 @@ export class FritterContext<State = { [ key : string ] : unknown }>
 	 */
 	public fritter : Fritter;
 
-	/**
-	 * The Fritter request.
-	 */
+	/** The Fritter request. */
 	public fritterRequest : FritterRequest;
 
-	/**
-	 * The Fritter response.
-	 */
+	/** The Fritter response. */
 	public fritterResponse : FritterResponse;
 
-	/**
-	 * The raw Node.js HTTP request.
-	 */
+	/** The raw Node.js HTTP request. */
 	public nodeRequest : http.IncomingMessage;
 
-	/**
-	 * The raw Node.js HTTP response.
-	 */
+	/** The raw Node.js HTTP response. */
 	public nodeResponse : http.ServerResponse;
 
 	/**
@@ -60,9 +52,9 @@ export class FritterContext<State = { [ key : string ] : unknown }>
 	{
 		this.fritter = fritter;
 
-		this.fritterRequest = new FritterRequest(this.fritter, request);
+		this.fritterRequest = new FritterRequest(fritter, request, response);
 
-		this.fritterResponse = new FritterResponse(this.fritter, response);
+		this.fritterResponse = new FritterResponse(fritter, request, response);
 
 		this.nodeRequest = request;
 
