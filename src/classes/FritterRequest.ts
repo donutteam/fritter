@@ -3,9 +3,10 @@
 //
 
 import type http from "node:http";
-import { type Socket } from "node:net";
-import { type TLSSocket } from "node:tls";
+import net from "node:net";
+import type tls from "node:tls";
 
+import accepts from "accepts";
 import contentType from "content-type";
 import fresh from "fresh";
 
@@ -30,6 +31,9 @@ export class FritterRequest
 
 	/** The raw Node.js HTTP response. */
 	public nodeResponse : http.ServerResponse;
+
+	/** Internal storage for the accepts property. */
+	#accepts : accepts.Accepts;
 
 	/** Internal storage for the contentLength property. */
 	#contentLength : number;
@@ -64,6 +68,17 @@ export class FritterRequest
 		this.nodeRequest = request;
 
 		this.nodeResponse = response;
+	}
+
+	/** Gets the Accepts object for this request. */
+	public getAccepts()
+	{
+		if (this.#accepts === undefined)
+		{
+			this.#accepts = accepts(this.nodeRequest);
+		}
+
+		return this.#accepts;
 	}
 
 	/** Gets the charset of the request's content type. */
@@ -250,7 +265,7 @@ export class FritterRequest
 	{
 		if (this.#protocol === undefined)
 		{
-			const isEncryptedSocket = (this.nodeRequest.socket as TLSSocket).encrypted ?? false;
+			const isEncryptedSocket = (this.nodeRequest.socket as tls.TLSSocket).encrypted ?? false;
 
 			if (isEncryptedSocket)
 			{
@@ -296,12 +311,30 @@ export class FritterRequest
 	}
 
 	/** Gets the socket of the request. */
-	public getSocket() : Socket
+	public getSocket() : net.Socket
 	{
 		return this.nodeRequest.socket;
 	}
 
-	// TODO: getSubdomains (using this.fritter.options.subdomainOffset)
+	/** Gets the subdomains of the request. */
+	public getSubdomains() : string[]
+	{
+		const hostName = this.getHostName();
+
+		if (hostName == null)
+		{
+			return [];
+		}
+
+		if (net.isIP(hostName) != 0)
+		{
+			return [];
+		}
+
+		return hostName.split(".")
+			.reverse()
+			.slice(this.fritter.options.subdomainOffset);
+	}
 
 	/** A URL object representing the URL of the request. */
 	public getUrl() : URL
