@@ -7,15 +7,13 @@ import https from "node:https";
 
 import { FritterContext } from "./FritterContext.js";
 
-import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import { FritterMiddleware } from "./FritterMiddleware.js";
 
 //
 // Class
 //
 
-/**
- * Options for a Fritter instance.
- */
+/** Options for a Fritter instance. */
 export interface FritterOptions
 {
 	/** The name of the header containing one or more IP addresses of proxies. */
@@ -28,34 +26,22 @@ export interface FritterOptions
 	trustProxyHeaders? : boolean;
 }
 
-/**
- * A web server.
- */
+/** A web server. */
 export class Fritter
 {
-	/**
-	 * The options for this Fritter instance.
-	 */
+	/** The options for this Fritter instance. */
 	public readonly options : FritterOptions;
 
-	/**
-	 * The middleware stack.
-	 */
-	private readonly middlewareStack : FritterMiddlewareFunction[];
+	/** The middleware stack. */
+	private readonly middlewareStack : FritterMiddleware[];
 
-	/**
-	 * The underlying Node.js HTTP server.
-	 */
+	/** The underlying Node.js HTTP server. */
 	private httpServer : http.Server;
 
-	/**
-	 * An HTTPS server.
-	 */
+	/** An HTTPS server. */
 	private httpsServer : https.Server;
 
-	/**
-	 * Constructs a new Fritter instance.
-	 */
+	/** Constructs a new Fritter instance. */
 	constructor(options : FritterOptions = {})
 	{
 		//
@@ -93,7 +79,7 @@ export class Fritter
 
 			if (nextMiddleware != null)
 			{
-				await nextMiddleware(fritterContext, executeMiddleware);
+				await nextMiddleware.execute(fritterContext, executeMiddleware);
 			}
 			else
 			{
@@ -209,12 +195,12 @@ export class Fritter
 	}
 
 	/**
-	 * Adds a middleware function to the stack.
+	 * Adds a middleware to the stack.
 	 *
 	 * @param fritterMiddlewareFunction A Fritter middleware function.
 	 */
-	public use(fritterMiddlewareFunction : FritterMiddlewareFunction) : void
+	public use(fritterMiddleware : FritterMiddleware) : void
 	{
-		this.middlewareStack.push(fritterMiddlewareFunction);
+		this.middlewareStack.push(fritterMiddleware);
 	}
 }
