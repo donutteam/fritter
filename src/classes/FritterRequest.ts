@@ -12,6 +12,7 @@ import fresh from "fresh";
 import typeIs from "type-is";
 
 import type { Fritter } from "./Fritter.js";
+import type { FritterContext } from "./FritterContext.js";
 
 import type { HTTPMethod } from "../types/HTTPMethod.js";
 
@@ -26,6 +27,9 @@ export class FritterRequest
 {
 	/** The Fritter instance that created this request. */
 	public fritter : Fritter;
+
+	/** The Fritter context. */
+	public fritterContext : FritterContext<unknown>;
 
 	/** The raw Node.js HTTP request. */
 	public nodeRequest : http.IncomingMessage;
@@ -61,10 +65,11 @@ export class FritterRequest
 	 * Constructs a new Fritter request using the given Node.js HTTP request.
 	 *
 	 * @param fritter The Fritter instance that created this request.
-	 * @param request A Node.js HTTP request.
-	 * @param response A Node.js HTTP response.
+	 * @param fritterContext The Fritter context.
+	 * @param nodeRequest A Node.js HTTP request.
+	 * @param nodeResponse A Node.js HTTP response.
 	 */
-	constructor(fritter : Fritter, request : http.IncomingMessage, response : http.ServerResponse)
+	constructor(fritter : Fritter, fritterContext : FritterContext<unknown>, nodeRequest : http.IncomingMessage, nodeResponse : http.ServerResponse)
 	{
 		//
 		// Store Arguments
@@ -72,9 +77,11 @@ export class FritterRequest
 
 		this.fritter = fritter;
 
-		this.nodeRequest = request;
+		this.fritterContext = fritterContext;
 
-		this.nodeResponse = response;
+		this.nodeRequest = nodeRequest;
+
+		this.nodeResponse = nodeResponse;
 	}
 
 	/** Gets the Accepts object for this request. */
@@ -149,7 +156,7 @@ export class FritterRequest
 	 */
 	public getFirstMatchingType(types : string[]) : string | false | null
 	{
-		return typeIs(this.nodeRequest, ...types);
+		return typeIs.is(this.getContentType() ?? "", ...types);
 	}
 
 	/**

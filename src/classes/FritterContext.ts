@@ -4,6 +4,8 @@
 
 import http from "node:http";
 
+import Cookies from "cookies";
+
 import type { Fritter } from "./Fritter.js";
 import { FritterRequest } from "./FritterRequest.js";
 import { FritterResponse } from "./FritterResponse.js";
@@ -15,7 +17,7 @@ import { FritterResponse } from "./FritterResponse.js";
 /**
  * A Fritter context.
  */
-export class FritterContext<State = { [ key : string ] : unknown }>
+export class FritterContext<State = { [key : string] : unknown }>
 {
 	/**
 	 * The Fritter instance that created this context.
@@ -33,6 +35,9 @@ export class FritterContext<State = { [ key : string ] : unknown }>
 
 	/** The raw Node.js HTTP response. */
 	public nodeResponse : http.ServerResponse;
+
+	/** The cookies for this request. */
+	public cookies : Cookies;
 
 	/**
 	 * The state of the request.
@@ -52,12 +57,17 @@ export class FritterContext<State = { [ key : string ] : unknown }>
 	{
 		this.fritter = fritter;
 
-		this.fritterRequest = new FritterRequest(fritter, request, response);
+		this.fritterRequest = new FritterRequest(fritter, this, request, response);
 
-		this.fritterResponse = new FritterResponse(fritter, request, response);
+		this.fritterResponse = new FritterResponse(fritter, this, request, response);
 
 		this.nodeRequest = request;
 
 		this.nodeResponse = response;
+
+		this.cookies = new Cookies(request, response,
+			{
+				secure: this.fritterRequest.isSecure(),
+			});
 	}
 }
