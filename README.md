@@ -11,3 +11,8 @@ It does at least require support for async functions.
 ```
 npm install @fritter/core
 ```
+
+## Usage
+This package is currently in **Alpha** (versions < 1.0.0) and is subject to change at any time.
+
+Documentation will be added as the API stabilizes.
