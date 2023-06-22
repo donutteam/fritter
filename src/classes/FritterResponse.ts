@@ -42,7 +42,7 @@ export class FritterResponse
 	public fritter : Fritter;
 
 	/** The Fritter context. */
-	public fritterContext : FritterContext<unknown>;
+	public fritterContext : FritterContext;
 
 	/** The raw Node.js HTTP request. */
 	public nodeRequest : http.IncomingMessage;
@@ -70,7 +70,7 @@ export class FritterResponse
 	 * @param nodeRequest A Node.js HTTP request.
 	 * @param nodeResponse A Node.js HTTP response.
 	 */
-	constructor(fritter : Fritter, fritterContext : FritterContext<unknown>, nodeRequest : http.IncomingMessage, nodeResponse : http.ServerResponse)
+	constructor(fritter : Fritter, fritterContext : FritterContext, nodeRequest : http.IncomingMessage, nodeResponse : http.ServerResponse)
 	{
 		//
 		// Store Arguments
