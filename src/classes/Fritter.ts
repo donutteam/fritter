@@ -4,10 +4,13 @@
 
 import http from "node:http";
 import https from "node:https";
+import stream from "node:stream";
 
 import { FritterContext } from "./FritterContext.js";
 
 import { FritterMiddleware } from "./FritterMiddleware.js";
+
+import { isEmptyBodyStatusCode } from "../utilities/status-codes.js";
 
 //
 // Class
@@ -67,7 +70,21 @@ export class Fritter
 	 */
 	private async handleRequest(request : http.IncomingMessage, response : http.ServerResponse)
 	{
+		//
+		// Set Default Status Code (404)
+		//
+
+		response.statusCode = 404;
+
+		//
+		// Create Fritter Context
+		//
+
 		const fritterContext = new FritterContext(this, request, response);
+
+		//
+		// Create Recursive Middleware Execution Function
+		//
 
 		let currentIndex = -1;
 
@@ -81,13 +98,11 @@ export class Fritter
 			{
 				await nextMiddleware.execute(fritterContext, executeMiddleware);
 			}
-			else
-			{
-				response.statusCode = 404;
-				response.setHeader("Content-Type", "text/plain");
-				response.end("Not found.");
-			}
 		};
+
+		//
+		// Execute Middleware Stack
+		//
 
 		try
 		{
@@ -97,9 +112,118 @@ export class Fritter
 		{
 			console.error("[Fritter] Error while executing middleware stack:", error);
 
+			if (!response.writable)
+			{
+				return;
+			}
+
 			response.statusCode = 500;
 			response.setHeader("Content-Type", "text/plain");
 			response.end("Internal server error.");
+
+			return;
+		}
+
+		//
+		// Get Request Parameters
+		//
+
+		const body = fritterContext.fritterResponse.getBody();
+
+		const statusCode = fritterContext.fritterResponse.getStatusCode();
+
+		//
+		// Ignore Body
+		//
+
+		if (isEmptyBodyStatusCode(statusCode))
+		{
+			response.end();
+
+			return;
+		}
+
+		//
+		// Head Response
+		//
+
+		if (fritterContext.fritterRequest.getHttpMethod() == "HEAD")
+		{
+			if (!response.headersSent && fritterContext.fritterResponse.getHeaderValue("Content-Length") == null)
+			{
+				const contentLength = fritterContext.fritterResponse.getContentLength();
+
+				if (contentLength != null)
+				{
+					fritterContext.fritterResponse.setHeaderValue("Content-Length", contentLength.toString());
+				}
+			}
+
+			response.end();
+
+			return;
+		}
+
+		//
+		// Status Code Body
+		//
+
+		if (body == null)
+		{
+			if (fritterContext.fritterResponse.hasExplicitlyNullBody())
+			{
+				fritterContext.fritterResponse.removeHeaderValue("Content-Type");
+				fritterContext.fritterResponse.removeHeaderValue("Transfer-Encoding");
+
+				fritterContext.fritterResponse.setContentLength(0);
+
+				response.end();
+
+				return;
+			}
+
+			const statusCodeBody = statusCode.toString();
+
+			if (!response.headersSent)
+			{
+				fritterContext.fritterResponse.setContentType("text/plain");
+
+				fritterContext.fritterResponse.setContentLength(statusCodeBody.length);
+			}
+
+			response.end(statusCodeBody);
+
+			return;
+		}
+
+		//
+		// Responses
+		//
+
+		if (Buffer.isBuffer(body) || typeof body == "string")
+		{
+			response.end(body);
+
+			return;
+		}
+		else if (body instanceof stream.Stream)
+		{
+			body.pipe(response);
+
+			return;
+		}
+		else
+		{
+			const bodyString = JSON.stringify(body);
+
+			if (!response.headersSent)
+			{
+				fritterContext.fritterResponse.setContentType("application/json");
+
+				fritterContext.fritterResponse.setContentLength(Buffer.byteLength(bodyString));
+			}
+
+			response.end(bodyString);
 		}
 	}
 
