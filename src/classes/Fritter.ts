@@ -321,7 +321,7 @@ export class Fritter
 	/**
 	 * Adds a middleware to the stack.
 	 *
-	 * @param fritterMiddlewareFunction A Fritter middleware function.
+	 * @param fritterMiddleware A Fritter middleware function.
 	 */
 	public use(fritterMiddleware : FritterMiddleware) : void
 	{
