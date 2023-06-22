@@ -17,7 +17,7 @@ import { FritterResponse } from "./FritterResponse.js";
 /**
  * A Fritter context.
  */
-export class FritterContext<State = { [key : string] : unknown }>
+export class FritterContext
 {
 	/**
 	 * The Fritter instance that created this context.
@@ -38,13 +38,6 @@ export class FritterContext<State = { [key : string] : unknown }>
 
 	/** The cookies for this request. */
 	public cookies : Cookies;
-
-	/**
-	 * The state of the request.
-	 *
-	 * This is a place to store custom data that is specific to this request.
-	 */
-	public state : State = {} as State;
 
 	/**
 	 * Constructs a new Fritter context.
