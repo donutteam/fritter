@@ -8,7 +8,7 @@ import { FritterContext } from "./FritterContext.js";
 // Class
 //
 
-export type FritterMiddlewareFunction = (context : FritterContext, next : () => Promise<void>) => Promise<void>;
+export type FritterMiddlewareFunction<Type extends FritterContext = FritterContext> = (context : Type, next : () => Promise<void>) => Promise<void>;
 
 export abstract class FritterMiddleware
 {
