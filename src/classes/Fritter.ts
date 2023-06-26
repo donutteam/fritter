@@ -323,8 +323,8 @@ export class Fritter
 	 *
 	 * @param fritterMiddleware A Fritter middleware function.
 	 */
-	public use(fritterMiddleware : FritterMiddlewareFunction) : void
+	public use<Type extends FritterContext = FritterContext>(fritterMiddleware : FritterMiddlewareFunction<Type>) : void
 	{
-		this.middlewareStack.push(fritterMiddleware);
+		this.middlewareStack.push(fritterMiddleware as FritterMiddlewareFunction);
 	}
 }
