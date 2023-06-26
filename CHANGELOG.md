@@ -1,3 +1,6 @@
+## 0.1.4
+Changed `Fritter.use` to accept any type of `FritterMiddlewareFunction`.
+
 ## 0.1.3
 Removing `FritterMiddleware` class as it just complicated things too much and was also too opinionated.
 
