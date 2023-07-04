@@ -142,9 +142,17 @@ export class FritterRequest
 			return null;
 		}
 
-		const parsedContentType = contentType.parse(this.nodeRequest);
+		try
+		{
+			const parsedMediaType = contentType.parse(this.nodeRequest);
 
-		return parsedContentType.type;
+			return parsedMediaType.type;
+		}
+		catch (error)
+		{
+			// Note: contentType.parse throws if there was no Content-Type header.
+			return null;
+		}
 	}
 
 	/**

@@ -1,3 +1,6 @@
+## 0.1.6
+Adding a try around calls to `contentType.parse` as it throws if there is no Content-Type header in a request/response.
+
 ## 0.1.5
 Experimental change where I include the `src` folder on publish for debugging.
 
