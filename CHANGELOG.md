@@ -1,3 +1,6 @@
+## 0.1.5
+Experimental change where I include the `src` folder on publish for debugging.
+
 ## 0.1.4
 Changed `Fritter.use` to accept any type of `FritterMiddlewareFunction`.
 
