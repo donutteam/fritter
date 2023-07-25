@@ -1,3 +1,6 @@
+## 0.1.7
+Updating packages.
+
 ## 0.1.6
 Adding a try around calls to `contentType.parse` as it throws if there is no Content-Type header in a request/response.
 
