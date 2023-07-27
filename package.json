@@ -25,7 +25,7 @@
     "@types/destroy": "^1.0.0",
     "@types/fresh": "^0.5.0",
     "@types/mime-types": "^2.1.1",
-    "@types/node": "^20.4.4",
+    "@types/node": "^20.4.5",
     "@types/on-finished": "^2.3.1",
     "@types/type-is": "^1.6.3",
     "@types/vary": "^1.1.0",

@@ -1,3 +1,6 @@
+## 0.1.8
+Updating @types/node package.
+
 ## 0.1.7
 Updating packages.
 
