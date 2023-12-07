@@ -42,8 +42,6 @@
     "vary": "^1.1.2"
   },
   "devDependencies": {
-    "@donutteam/eslint-config": "^3.0.0",
-    "eslint": "^8.52.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   }

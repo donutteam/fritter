@@ -1,3 +1,7 @@
+## 0.1.10
+
+* Removing eslint packages and config.
+
 ## 0.1.9
 Updating packages.
 
