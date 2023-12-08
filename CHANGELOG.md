@@ -1,3 +1,6 @@
+## 0.1.11
+Now exposes `middlewareStack`, `httpServer` and `httpsServer` for advanced use cases.
+
 ## 0.1.10
 
 * Removing eslint packages and config.

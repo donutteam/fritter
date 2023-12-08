@@ -36,13 +36,13 @@ export class Fritter
 	public readonly options : FritterOptions;
 
 	/** The middleware stack. */
-	private readonly middlewareStack : FritterMiddlewareFunction[];
+	public readonly middlewareStack : FritterMiddlewareFunction[];
 
 	/** The underlying Node.js HTTP server. */
-	private httpServer : http.Server;
+	public httpServer : http.Server;
 
 	/** An HTTPS server. */
-	private httpsServer : https.Server;
+	public httpsServer : https.Server;
 
 	/** Constructs a new Fritter instance. */
 	constructor(options : FritterOptions = {})
