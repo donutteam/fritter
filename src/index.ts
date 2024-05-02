@@ -14,6 +14,7 @@ export * from "./functions/is-redirect-status-code.js";
 export * as BodyParserMiddleware from "./middlewares/body-parser.js";
 export * as CorsMiddleware from "./middlewares/cors.js";
 export * as ForceSslMiddleware from "./middlewares/force-ssl.js";
+export * as LogRequestMiddleware from "./middlewares/log-request.js";
 
 export * from "./types/FritterMiddlewareFunction.js";
 export * from "./types/HTTPMethod.js";
