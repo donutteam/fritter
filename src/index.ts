@@ -11,5 +11,8 @@ export * from "./functions/encode-html.js";
 export * from "./functions/is-empty-body-status-code.js";
 export * from "./functions/is-redirect-status-code.js";
 
+export * as BodyParser from "./middlewares/body-parser.js";
+
 export * from "./types/FritterMiddlewareFunction.js";
 export * from "./types/HTTPMethod.js";
+export * from "./types/PossibleJsonData.js";
