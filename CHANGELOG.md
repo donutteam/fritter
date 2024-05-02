@@ -1,3 +1,6 @@
+## 1.1.0
+Added `getRoutes`, `loadRoutesFile`, `loadRoutesDirectory`, and `remoteRoute` functions to the `CreateResult` for the `RouterMiddleware`.
+
 ## 1.0.2
 Made `CreateOptions` optional for the `BodyParser`, `Cors`, `ForceSsl` and `LogRequest` middlewares.
 
