@@ -2,7 +2,7 @@
   "name": "@donutteam/fritter",
   "version": "1.0.0",
   "description": "A web framework.",
-  "main": "./lib/index.js",
+  "main": "./build/index.js",
   "scripts": {
     "build": "npx rimraf lib && npx tsc",
     "build:watch": "npx rimraf lib && npx tsc --watch",

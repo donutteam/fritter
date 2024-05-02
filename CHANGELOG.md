@@ -1,3 +1,6 @@
+## 1.0.1
+Fixed a mistake where the `main` path in `package.json` was incorrect.
+
 ## 1.0.0
 Initial stable release.
 
