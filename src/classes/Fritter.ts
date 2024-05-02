@@ -8,7 +8,7 @@ import stream from "node:stream";
 
 import { FritterContext } from "./FritterContext.js";
 
-import { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
 import { isEmptyBodyStatusCode } from "../utilities/status-codes.js";
 
