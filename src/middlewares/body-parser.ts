@@ -21,13 +21,6 @@ export type OnBodyParseErrorCallback = (context : FritterContext, error : unknow
 // Interfaces
 //
 
-export interface CreateOptions
-{
-	formidableOptions? : Formidable.Options;
-
-	onBodyParseError? : OnBodyParseErrorCallback;
-}
-
 export interface ParsedBody
 {
 	fields : { [key : string] : PossibleJsonData };
@@ -50,59 +43,73 @@ export interface MiddlewareFritterContext extends FritterContext
 // Create Function
 //
 
-export function create(options : CreateOptions) : FritterMiddlewareFunction<MiddlewareFritterContext>
+export interface CreateOptions
+{
+	formidableOptions? : Formidable.Options;
+
+	onBodyParseError? : OnBodyParseErrorCallback;
+}
+
+export interface CreateResult
+{
+	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
+}
+
+export function create(options : CreateOptions) : CreateResult
 {
 	const formidableOptions = options.formidableOptions ?? {};
 
 	const onBodyParseError = options.onBodyParseError ?? null;
 
-	return async (context, next) =>
-	{
-		const contentType = context.fritterRequest.getContentType();
-
-		switch (contentType)
+	return {
+		execute: async (context, next) =>
 		{
-			case "application/x-www-form-urlencoded":
-			case "multipart/form-data":
-			{
-				context.parsedBody = await parseFormData(
-					{
-						context,
-						formidableOptions,
-						onBodyParseError,
-					});
+			const contentType = context.fritterRequest.getContentType();
 
-				break;
+			switch (contentType)
+			{
+				case "application/x-www-form-urlencoded":
+				case "multipart/form-data":
+				{
+					context.parsedBody = await parseFormData(
+						{
+							context,
+							formidableOptions,
+							onBodyParseError,
+						});
+
+					break;
+				}
+
+				case "application/json":
+				{
+					context.parsedBody = await parseJson(
+						{
+							context,
+							formidableOptions,
+							onBodyParseError,
+						});
+
+					break;
+				}
+
+				default:
+				{
+					context.parsedBody =
+						{
+							fields: {},
+							fieldArrays: {},
+							files: {},
+							fileArrays: {},
+							rawJson: null,
+						};
+
+					break;
+				}
 			}
 
-			case "application/json":
-			{
-				context.parsedBody = await parseJson(
-					{
-						context,
-						formidableOptions,
-						onBodyParseError,
-					});
-
-				break;
-			}
-
-			default:
-			{
-				context.parsedBody =
-					{
-						fields: {},
-						fieldArrays: {},
-						files: {},
-						fileArrays: {},
-						rawJson: null,
-					};
-
-				break;
-			}
-		}
-
-		await next();
+			await next();
+		},
 	};
 }
 

@@ -12,11 +12,6 @@ import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFuncti
 // Interfaces
 //
 
-export interface CreateOptions
-{
-	allowInsecureLocalIpAddresses? : boolean;
-}
-
 export interface MiddlewareFritterContext extends FritterContext
 {
 	// No additional properties
@@ -26,26 +21,38 @@ export interface MiddlewareFritterContext extends FritterContext
 // Create Function
 //
 
-export function create(options : CreateOptions) : FritterMiddlewareFunction<MiddlewareFritterContext>
+export interface CreateOptions
+{
+	allowInsecureLocalIpAddresses? : boolean;
+}
+
+export interface CreateResult
+{
+	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
+}
+
+export function create(options : CreateOptions) : CreateResult
 {
 	const allowLocalIpAddresses = options.allowInsecureLocalIpAddresses ?? false;
 
-	return async (context, next) =>
-	{
-		if (context.fritterRequest.isSecure())
+	return {
+		execute: async (context, next) =>
 		{
-			return await next();
-		}
+			if (context.fritterRequest.isSecure())
+			{
+				return await next();
+			}
 
-		if (allowLocalIpAddresses && isLocalIpAddress(context.fritterRequest.getIp()))
-		{
-			return await next();
-		}
+			if (allowLocalIpAddresses && isLocalIpAddress(context.fritterRequest.getIp()))
+			{
+				return await next();
+			}
 
-		const url = new URL(context.fritterRequest.getUrl());
+			const url = new URL(context.fritterRequest.getUrl());
 
-		url.protocol = "https:";
+			url.protocol = "https:";
 
-		context.fritterResponse.setRedirect(url.toString());
+			context.fritterResponse.setRedirect(url.toString());
+		},
 	};
 }

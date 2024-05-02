@@ -29,7 +29,7 @@ export type MiddlewareFritterContext<RenderComponentOptions, BaseFritterContext 
 	};
 
 //
-// Interfaces
+// Create Function
 //
 
 export interface CreateOptions<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>
@@ -39,36 +39,39 @@ export interface CreateOptions<ComponentFunctionOptions, BaseFritterContext exte
 	getOptionsFunction : GetOptionsFunction<ComponentFunctionOptions, BaseFritterContext>;
 }
 
-//
-// Create Function
-//
+export interface CreateResult<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>
+{
+	execute : FritterMiddlewareFunction<MiddlewareFritterContext<ComponentFunctionOptions, BaseFritterContext>>;
+}
 
-export function create<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>(options : CreateOptions<ComponentFunctionOptions, BaseFritterContext>) : FritterMiddlewareFunction<MiddlewareFritterContext<ComponentFunctionOptions, BaseFritterContext>>
+export function create<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>(options : CreateOptions<ComponentFunctionOptions, BaseFritterContext>) : CreateResult<ComponentFunctionOptions, BaseFritterContext>
 {
 	const componentFunction = options.componentFunction;
 
 	const getOptionsFunction = options.getOptionsFunction;
 
-	return async (context, next) =>
-	{
-		//
-		// Add Render Component Function
-		//
-
-		context.renderComponent = (options) =>
+	return {
+		execute: async (context, next) =>
 		{
-			const fullOptions = getOptionsFunction(context, options);
+			//
+			// Add Render Component Function
+			//
 
-			const component = componentFunction(fullOptions);
+			context.renderComponent = (options) =>
+			{
+				const fullOptions = getOptionsFunction(context, options);
 
-			context.fritterResponse.setContentType("text/html");
-			context.fritterResponse.setBody(component.renderToString());
-		};
+				const component = componentFunction(fullOptions);
 
-		//
-		// Execute Next Middleware
-		//
+				context.fritterResponse.setContentType("text/html");
+				context.fritterResponse.setBody(component.renderToString());
+			};
 
-		await next();
+			//
+			// Execute Next Middleware
+			//
+
+			await next();
+		},
 	};
 }
