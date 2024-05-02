@@ -52,12 +52,12 @@ export interface MiddlewareFritterContext extends FritterContext
 
 export function create(options : CreateOptions) : FritterMiddlewareFunction<MiddlewareFritterContext>
 {
+	const formidableOptions = options.formidableOptions ?? {};
+
+	const onBodyParseError = options.onBodyParseError ?? null;
+
 	return async (context, next) =>
 	{
-		const formidableOptions = options.formidableOptions ?? {};
-
-		const onBodyParseError = options.onBodyParseError ?? null;
-
 		const contentType = context.fritterRequest.getContentType();
 
 		switch (contentType)
