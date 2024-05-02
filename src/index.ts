@@ -7,5 +7,9 @@ export * from "./classes/FritterContext.js";
 export * from "./classes/FritterRequest.js";
 export * from "./classes/FritterResponse.js";
 
+export * from "./functions/encode-html.js";
+export * from "./functions/is-empty-body-status-code.js";
+export * from "./functions/is-redirect-status-code.js";
+
 export * from "./types/FritterMiddlewareFunction.js";
 export * from "./types/HTTPMethod.js";

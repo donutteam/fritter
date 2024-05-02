@@ -10,7 +10,7 @@ import { FritterContext } from "./FritterContext.js";
 
 import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
-import { isEmptyBodyStatusCode } from "../utilities/status-codes.js";
+import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";
 
 //
 // Class

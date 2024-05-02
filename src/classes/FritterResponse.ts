@@ -18,8 +18,8 @@ import vary from "vary";
 import type { Fritter } from "./Fritter.js";
 import type { FritterContext } from "./FritterContext.js";
 
-import { encodeHtml } from "../utilities/encode-html.js";
-import { isEmptyBodyStatusCode, type RedirectStatusCode } from "../utilities/status-codes.js";
+import { encodeHtml } from "../functions/encode-html.js";
+import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";
 
 //
 // Class
@@ -29,7 +29,7 @@ import { isEmptyBodyStatusCode, type RedirectStatusCode } from "../utilities/sta
 export interface FritterResponseRedirectOptions
 {
 	/** The status code to use for the redirect. */
-	statusCode? : RedirectStatusCode;
+	statusCode? : 300 | 301 | 302 | 303 | 305 | 307 | 308;
 
 	/** The URL to redirect to if there was no referer. */
 	fallbackRedirectUrl? : string;

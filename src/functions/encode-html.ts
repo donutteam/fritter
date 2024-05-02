@@ -1,8 +1,7 @@
 //
-// Internal Fritter Utilities
+// Function
 //
 
-/** Encodes a string for use in HTML. */
 export function encodeHtml(rawString : string) : string
 {
 	return rawString.replace(/[<>&"']/g, (char) =>
