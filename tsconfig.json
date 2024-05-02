@@ -4,8 +4,12 @@
 		"rootDir": "./src",
 		"outDir": "./build",
 
+		"lib": [
+			"dom"
+		],
+
 		// Disabled because FritterRequest and FritterResponse intentionally have uninitialised private properties
-		"strictPropertyInitialization": false,
+		"strictPropertyInitialization": false
 	},
 	"include": [
 		"./src/**/*.js",
