@@ -31,9 +31,9 @@ export interface CreateResult
 	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
 }
 
-export function create(options : CreateOptions) : CreateResult
+export function create(options? : CreateOptions) : CreateResult
 {
-	const allowLocalIpAddresses = options.allowInsecureLocalIpAddresses ?? false;
+	const allowLocalIpAddresses = options?.allowInsecureLocalIpAddresses ?? false;
 
 	return {
 		execute: async (context, next) =>

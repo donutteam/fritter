@@ -1,3 +1,6 @@
+## 1.0.2
+Made `CreateOptions` optional for the `BodyParser`, `Cors`, `ForceSsl` and `LogRequest` middlewares.
+
 ## 1.0.1
 Fixed a mistake where the `main` path in `package.json` was incorrect.
 

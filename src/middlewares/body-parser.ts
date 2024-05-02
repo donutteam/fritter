@@ -55,11 +55,11 @@ export interface CreateResult
 	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
 }
 
-export function create(options : CreateOptions) : CreateResult
+export function create(options? : CreateOptions) : CreateResult
 {
-	const formidableOptions = options.formidableOptions ?? {};
+	const formidableOptions = options?.formidableOptions ?? {};
 
-	const onBodyParseError = options.onBodyParseError ?? null;
+	const onBodyParseError = options?.onBodyParseError ?? null;
 
 	return {
 		execute: async (context, next) =>

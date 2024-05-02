@@ -29,9 +29,9 @@ export interface CreateResult
 	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
 }
 
-export function create(options : CreateOptions) : CreateResult
+export function create(options? : CreateOptions) : CreateResult
 {
-	const allowCredentialsOrigins = options.allowCredentialsOrigins ?? [];
+	const allowCredentialsOrigins = options?.allowCredentialsOrigins ?? [];
 
 	return {
 		execute: async (context, next) =>
