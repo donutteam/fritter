@@ -40,6 +40,8 @@ export interface Route
 export interface CreateOptions
 {
 	pathToRegexpOptions? : TokensToRegexpOptions & ParseOptions;
+
+	routes? : Route[];
 }
 
 export interface CreateResult
@@ -55,11 +57,11 @@ export interface CreateResult
 	removeRoute : (route : Route) => void;
 }
 
-export function create(options : CreateOptions) : CreateResult
+export function create(options? : CreateOptions) : CreateResult
 {
-	const pathToRegexpOptions = options.pathToRegexpOptions ?? {};
+	const pathToRegexpOptions = options?.pathToRegexpOptions ?? {};
 
-	const routes : Route[] = [];
+	const routes : Route[] = options?.routes ?? [];
 
 	const execute : CreateResult["execute"] = async (context, next) =>
 	{

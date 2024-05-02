@@ -1,3 +1,8 @@
+## 1.1.1
+
+* Re-added `routes` to `CreateOptions` for Router middleware. Didn't mean to make a breaking change.
+* Made `CreateOptions` for Router middleware optional.
+
 ## 1.1.0
 Added `getRoutes`, `loadRoutesFile`, `loadRoutesDirectory`, and `remoteRoute` functions to the `CreateResult` for the `RouterMiddleware`.
 
