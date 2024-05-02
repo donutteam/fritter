@@ -6,8 +6,6 @@
   "scripts": {
     "build": "npx rimraf lib && npx tsc",
     "build:watch": "npx rimraf lib && npx tsc --watch",
-    "lint": "eslint . -c ./.eslintrc.cjs",
-    "lint-fix": "eslint . -c ./.eslintrc.cjs --fix",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
