@@ -1,6 +1,7 @@
 ## 1.2.0
 
 * Added `CurrentPage` middleware.
+* Added `Notice` middleware.
 
 ## 1.1.1
 
