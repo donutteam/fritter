@@ -13,6 +13,7 @@ export * from "./functions/is-redirect-status-code.js";
 
 export * as BodyParserMiddleware from "./middlewares/body-parser.js";
 export * as CorsMiddleware from "./middlewares/cors.js";
+export * as CurrentPageMiddleware from "./middlewares/current-page.js";
 export * as ForceSslMiddleware from "./middlewares/force-ssl.js";
 export * as LogRequestMiddleware from "./middlewares/log-request.js";
 export * as RenderComponentMiddleware from "./middlewares/render-component.js";

@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Added `CurrentPage` middleware.
+
 ## 1.1.1
 
 * Re-added `routes` to `CreateOptions` for Router middleware. Didn't mean to make a breaking change.
