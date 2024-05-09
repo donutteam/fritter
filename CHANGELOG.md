@@ -1,3 +1,7 @@
+## 1.2.1
+
+* Fixed various mistakes in the `CurrentPage` middleware.
+
 ## 1.2.0
 
 * Added `CurrentPage` middleware.

@@ -21,7 +21,7 @@ export interface MiddlewareFritterContext extends FritterContext
 
 export interface CreateOptions
 {
-	getPageNumber : (context : MiddlewareFritterContext) => number;
+	getPageNumber? : (context : MiddlewareFritterContext) => number;
 }
 
 export interface CreateResult
@@ -29,25 +29,25 @@ export interface CreateResult
 	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
 }
 
-export function create(options : CreateOptions) : CreateResult
+export function create(options : CreateOptions = {}) : CreateResult
 {
 	const getPageNumber = options.getPageNumber ??
 		((context) =>
 		{
-			return context.fritterRequest.getSearchParams().get("page");
-		});
-
-	return {
-		execute: async (context, next) =>
-		{
-			let currentPage = getPageNumber(context);
+			let currentPage = parseInt(context.fritterRequest.getSearchParams().get("page") ?? "1");
 
 			if (isNaN(currentPage))
 			{
 				currentPage = 1;
 			}
 
-			context.currentPage = currentPage;
+			return currentPage;
+		});
+
+	return {
+		execute: async (context, next) =>
+		{
+			context.currentPage = getPageNumber(context);
 
 			await next();
 		},
