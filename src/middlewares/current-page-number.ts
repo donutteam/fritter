@@ -12,7 +12,10 @@ import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFuncti
 
 export interface MiddlewareFritterContext extends FritterContext
 {
+	/** @deprecated */
 	currentPage : number;
+
+	currentPageNumber : number;
 }
 
 //
@@ -47,7 +50,11 @@ export function create(options : CreateOptions = {}) : CreateResult
 	return {
 		execute: async (context, next) =>
 		{
-			context.currentPage = getPageNumber(context);
+			const currentPageNumber = getPageNumber(context);
+
+			context.currentPage = currentPageNumber;
+
+			context.currentPageNumber = currentPageNumber;
 
 			await next();
 		},

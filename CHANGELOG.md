@@ -1,3 +1,8 @@
+## 1.3.0
+Renamed `CurrentPage` middleware to `CurrentPageNumber`. The old name is still available for now.
+
+The middleware's context also now contains a `currentPageNumber` property in addition to the now deprecated `currentPage` property.
+
 ## 1.2.1
 
 * Fixed various mistakes in the `CurrentPage` middleware.
