@@ -6,7 +6,7 @@ import { DE } from "@donutteam/document-builder";
 
 import type { FritterContext } from "../classes/FritterContext.js";
 
-import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
 //
 // Types
@@ -41,7 +41,7 @@ export interface CreateOptions<ComponentFunctionOptions, BaseFritterContext exte
 
 export interface CreateResult<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>
 {
-	execute : FritterMiddlewareFunction<MiddlewareFritterContext<ComponentFunctionOptions, BaseFritterContext>>;
+	execute : MiddlewareFunction<MiddlewareFritterContext<ComponentFunctionOptions, BaseFritterContext>>;
 }
 
 export function create<ComponentFunctionOptions, BaseFritterContext extends FritterContext = FritterContext>(options : CreateOptions<ComponentFunctionOptions, BaseFritterContext>) : CreateResult<ComponentFunctionOptions, BaseFritterContext>

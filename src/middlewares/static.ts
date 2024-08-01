@@ -11,7 +11,7 @@ import mimeTypes from "mime-types";
 
 import type { FritterContext } from "../classes/FritterContext.js";
 
-import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
 //
 // Types
@@ -65,7 +65,7 @@ export interface CreateOptions
 
 export interface CreateResult
 {
-	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
+	execute : MiddlewareFunction<MiddlewareFritterContext>;
 
 	getCacheBustedPath : (filePath : string) => string;
 }

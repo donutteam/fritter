@@ -8,7 +8,7 @@ import stream from "node:stream";
 
 import { FritterContext } from "./FritterContext.js";
 
-import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
 import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";
 
@@ -36,7 +36,7 @@ export class Fritter
 	public readonly options : FritterOptions;
 
 	/** The middleware stack. */
-	public readonly middlewareStack : FritterMiddlewareFunction[];
+	public readonly middlewareStack : MiddlewareFunction[];
 
 	/** The underlying Node.js HTTP server. */
 	public httpServer : http.Server;
@@ -323,8 +323,8 @@ export class Fritter
 	 *
 	 * @param fritterMiddleware A Fritter middleware function.
 	 */
-	public use<Type extends FritterContext = FritterContext>(fritterMiddleware : FritterMiddlewareFunction<Type>) : void
+	public use<Type extends FritterContext = FritterContext>(fritterMiddleware : MiddlewareFunction<Type>) : void
 	{
-		this.middlewareStack.push(fritterMiddleware as FritterMiddlewareFunction);
+		this.middlewareStack.push(fritterMiddleware as MiddlewareFunction);
 	}
 }

@@ -2,6 +2,8 @@
 
 * Made the RouterMiddleware's `Route` interface generic, allowing you to pass in a `FritterContext` type.
 	* This is optional and the type defaults to the RouterMiddleware's `MiddlewareFritterContext` type.
+* Renamed `FritterMiddlewareFunction` to `MiddlewareFunction`.
+	* The old name is still available for now but marked as deprecated.
 
 ## 1.3.0
 Renamed `CurrentPage` middleware to `CurrentPageNumber`. The old name is still available for now.

@@ -4,7 +4,7 @@
 
 import type { FritterContext } from "../classes/FritterContext.js";
 
-import type { FritterMiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 
 import { z } from "zod";
 
@@ -110,7 +110,7 @@ export interface CreateOptions
 
 export interface CreateResult
 {
-	execute : FritterMiddlewareFunction<MiddlewareFritterContext>;
+	execute : MiddlewareFunction<MiddlewareFritterContext>;
 }
 
 export function create(options : CreateOptions) : CreateResult
