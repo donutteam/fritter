@@ -22,15 +22,15 @@ export interface MiddlewareFritterContext extends FritterContext
 	routeParameters : { [key : string] : string };
 }
 
-export interface Route
+export interface Route<RouteFritterContext extends MiddlewareFritterContext = MiddlewareFritterContext>
 {
 	method : HTTPMethod | "ALL";
 
 	path : string;
 
-	middlewares? : FritterMiddlewareFunction<any>[];
+	middlewares? : MiddlewareFunction<RouteFritterContext>[];
 
-	handler : FritterMiddlewareFunction;
+	handler : MiddlewareFunction<RouteFritterContext>;
 }
 
 //
