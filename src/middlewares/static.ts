@@ -11,7 +11,7 @@ import mimeTypes from "mime-types";
 
 import type { FritterContext } from "../classes/FritterContext.js";
 
-import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import type { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
 // Types

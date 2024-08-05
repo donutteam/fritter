@@ -11,10 +11,10 @@ import contentType from "content-type";
 import fresh from "fresh";
 import typeIs from "type-is";
 
-import type { Fritter } from "./Fritter.js";
-import type { FritterContext } from "./FritterContext.js";
+import { Fritter } from "./Fritter.js";
+import { FritterContext } from "./FritterContext.js";
 
-import type { HTTPMethod } from "../types/HTTPMethod.js";
+import { HTTPMethod } from "../types/HTTPMethod.js";
 
 //
 // Class

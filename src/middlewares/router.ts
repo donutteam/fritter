@@ -6,12 +6,12 @@ import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
-import { pathToRegexp, type Key, type ParseOptions, type TokensToRegexpOptions } from "path-to-regexp";
+import { Key, pathToRegexp, ParseOptions, TokensToRegexpOptions } from "path-to-regexp";
 
 import type { FritterContext } from "../classes/FritterContext.js";
 
-import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
 import type { HTTPMethod } from "../types/HTTPMethod.js";
+import type { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
 // Interfaces
@@ -61,9 +61,9 @@ export function create(options? : CreateOptions) : CreateResult
 {
 	const pathToRegexpOptions = options?.pathToRegexpOptions ?? {};
 
-	const routes : Route[] = options?.routes ?? [];
+	const routes: Route[] = options?.routes ?? [];
 
-	const execute : CreateResult["execute"] = async (context, next) =>
+	const execute: CreateResult["execute"] = async (context, next) =>
 	{
 		//
 		// Initialise Fritter Context

@@ -2,9 +2,9 @@
 // Imports
 //
 
-import type { FritterContext } from "../classes/FritterContext.js";
+import { FritterContext } from "../classes/FritterContext.js";
 
-import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
 // Interfaces

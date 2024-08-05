@@ -6,7 +6,7 @@ import http from "node:http";
 
 import Cookies from "cookies";
 
-import type { Fritter } from "./Fritter.js";
+import { Fritter } from "./Fritter.js";
 import { FritterRequest } from "./FritterRequest.js";
 import { FritterResponse } from "./FritterResponse.js";
 

@@ -17,11 +17,9 @@ export * as CurrentPageMiddleware from "./middlewares/current-page-number.js"; /
 export * as CurrentPageNumberMiddleware from "./middlewares/current-page-number.js";
 export * as ForceSslMiddleware from "./middlewares/force-ssl.js";
 export * as LogRequestMiddleware from "./middlewares/log-request.js";
-export * as NoticeMiddleware from "./middlewares/notice.js";
-export * as RenderComponentMiddleware from "./middlewares/render-component.js";
 export * as RouterMiddleware from "./middlewares/router.js";
 export * as StaticMiddleware from "./middlewares/static.js";
 
-export * from "./types/FritterMiddlewareFunction.js";
 export * from "./types/HTTPMethod.js";
+export * from "./types/MiddlewareFunction.js";
 export * from "./types/PossibleJsonData.js";

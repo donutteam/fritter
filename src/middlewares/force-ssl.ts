@@ -6,7 +6,7 @@ import { isLocalIpAddress } from "@donutteam/utilities";
 
 import { FritterContext } from "../classes/FritterContext.js";
 
-import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
+import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
 // Interfaces

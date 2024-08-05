@@ -1,3 +1,12 @@
+## 2.0.0
+
+* Removed the NoticeMiddleware.
+* Removed the RenderComponentMiddleware.
+* Removed the `@donutteam/document-builder` peer dependency.
+* Removed the `FritterMiddlewareFunction` type.
+* Updated most other dependencies.
+	* Notably did *not* update `path-to-regexp` as I cannot currently be bothered to figure out the v7.0.0 changes.
+
 ## 1.4.0
 
 * Made the RouterMiddleware's `Route` interface generic, allowing you to pass in a `FritterContext` type.

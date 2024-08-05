@@ -15,8 +15,8 @@ import onFinished from "on-finished";
 import typeIs from "type-is";
 import vary from "vary";
 
-import type { Fritter } from "./Fritter.js";
-import type { FritterContext } from "./FritterContext.js";
+import { Fritter } from "./Fritter.js";
+import { FritterContext } from "./FritterContext.js";
 
 import { encodeHtml } from "../functions/encode-html.js";
 import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";

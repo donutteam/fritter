@@ -9,7 +9,10 @@
 		],
 
 		// Disabled because FritterRequest and FritterResponse intentionally have uninitialised private properties
-		"strictPropertyInitialization": false
+		"strictPropertyInitialization": false,
+
+		// Disabled because I don't like it anymore
+		"verbatimModuleSyntax": false
 	},
 	"include": [
 		"./src/**/*.js",

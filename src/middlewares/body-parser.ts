@@ -2,14 +2,14 @@
 // Imports
 //
 
-import type { IncomingMessage } from "node:http";
+import { IncomingMessage } from "node:http";
 
 import Formidable from "formidable";
 
-import type { FritterContext } from "../classes/FritterContext.js";
+import { FritterContext } from "../classes/FritterContext.js";
 
-import type { MiddlewareFunction } from "../types/FritterMiddlewareFunction.js";
-import type { PossibleJsonData } from "../types/PossibleJsonData.js";
+import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
+import { PossibleJsonData } from "../types/PossibleJsonData.js";
 
 //
 // Types
