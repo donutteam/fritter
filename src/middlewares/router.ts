@@ -50,6 +50,8 @@ export interface CreateResult
 
 	getRoutes : () => Route[];
 
+	addRoute : (route : Route) => void;
+
 	loadRoutesDirectory : (directoryPath : string) => Promise<Route[]>;
 
 	loadRoutesFile : (filePath : string) => Promise<Route[]>;
@@ -164,6 +166,11 @@ export function create(options? : CreateOptions) : CreateResult
 		return [ ...routes ];
 	};
 
+	const addRoute : CreateResult["addRoute"] = (route) =>
+	{
+		routes.push(route);
+	}
+
 	const loadRoutesFile : CreateResult["loadRoutesFile"] = async (filePath) =>
 	{
 		const routeContainer = await import(url.pathToFileURL(filePath).toString()) as
@@ -246,6 +253,7 @@ export function create(options? : CreateOptions) : CreateResult
 	return {
 		execute,
 		getRoutes,
+		addRoute,
 		loadRoutesDirectory,
 		loadRoutesFile,
 		removeRoute,

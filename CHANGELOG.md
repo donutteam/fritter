@@ -1,3 +1,7 @@
+## 2.1.0
+
+* Added an `addRoute` function to the `RouterMiddleware` to manually add a route.
+
 ## 2.0.0
 
 * Removed the NoticeMiddleware.
