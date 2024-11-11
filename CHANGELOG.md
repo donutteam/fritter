@@ -4,6 +4,7 @@
 * refactor: changed how the Fritter class stores its options
 * refactor: removed support for https server
 * refactor: renamed Fritter.httpServer to server
+* refactor: removed local utility functions
 
 ## 2.1.0
 

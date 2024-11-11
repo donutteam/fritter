@@ -5,11 +5,11 @@
 import http from "node:http";
 import stream from "node:stream";
 
+import * as Utilities from "@donutteam/utilities";
+
 import { FritterContext } from "./FritterContext.js";
 
 import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
-
-import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";
 
 //
 // Class
@@ -183,7 +183,7 @@ export class Fritter
 		// Ignore Body
 		//
 
-		if (isEmptyBodyStatusCode(statusCode))
+		if (Utilities.NetworkLib.isEmptyBodyStatusCode(statusCode))
 		{
 			response.end();
 

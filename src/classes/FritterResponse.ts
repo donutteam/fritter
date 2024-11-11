@@ -6,6 +6,7 @@ import http from "node:http";
 import path from "node:path";
 import stream from "node:stream";
 
+import * as Utilities from "@donutteam/utilities";
 import contentDisposition from "content-disposition";
 import contentType from "content-type";
 import destroy from "destroy";
@@ -16,9 +17,6 @@ import vary from "vary";
 
 import { Fritter } from "./Fritter.js";
 import { FritterContext } from "./FritterContext.js";
-
-import { encodeHtml } from "../functions/encode-html.js";
-import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js";
 
 //
 // Class
@@ -322,7 +320,7 @@ export class FritterResponse
 
 		if (body == null)
 		{
-			if (!isEmptyBodyStatusCode(this.getStatusCode()))
+			if (!Utilities.NetworkLib.isEmptyBodyStatusCode(this.getStatusCode()))
 			{
 				if (this.getContentType() == "application/json")
 				{
@@ -517,7 +515,7 @@ export class FritterResponse
 
 		if (this.fritterContext.fritterRequest.getAccepts().types("text/html"))
 		{
-			const encodedUrl = encodeHtml(url);
+			const encodedUrl = Utilities.StringLib.encodeHtml(url);
 
 			this.setContentType("text/html");
 
@@ -548,7 +546,7 @@ export class FritterResponse
 
 		this.nodeResponse.statusCode = statusCode;
 
-		if (isEmptyBodyStatusCode(statusCode))
+		if (Utilities.NetworkLib.isEmptyBodyStatusCode(statusCode))
 		{
 			this.setBody(null);
 		}

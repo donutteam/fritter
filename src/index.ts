@@ -7,10 +7,6 @@ export * from "./classes/FritterContext.js";
 export * from "./classes/FritterRequest.js";
 export * from "./classes/FritterResponse.js";
 
-export * from "./functions/encode-html.js";
-export * from "./functions/is-empty-body-status-code.js";
-export * from "./functions/is-redirect-status-code.js";
-
 export * as BodyParserMiddleware from "./middlewares/body-parser.js";
 export * as CorsMiddleware from "./middlewares/cors.js";
 export * as CurrentPageMiddleware from "./middlewares/current-page-number.js"; // Deprecated, remove in v2.0.0, if that ever happens
