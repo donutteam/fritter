@@ -13,6 +13,7 @@
 * refactor: made StaticMiddleware return its options
 * fix: fixed a bug where the StaticMiddleware ignored query strings
 * refactor: new BodyParserMiddleware
+* refactor: simplified tsconfig
 
 ## 2.1.0
 
