@@ -12,9 +12,6 @@ import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 export type MiddlewareFritterContext = FritterContext &
 {
-	/** @deprecated */
-	currentPage: number;
-
 	currentPageNumber: number;
 };
 
@@ -25,34 +22,36 @@ export type CreateOptions =
 
 export type CreateResult =
 {
+	getPageNumber: (context: MiddlewareFritterContext) => number;
 	execute: MiddlewareFunction<MiddlewareFritterContext>;
 };
 
 export function create(options: CreateOptions = {}): CreateResult
 {
-	const getPageNumber = options.getPageNumber ??
-		((context) =>
-		{
-			let currentPage = parseInt(context.fritterRequest.getSearchParams().get("page") ?? "1");
-
-			if (isNaN(currentPage))
+	const currentPageNumberMiddleware: CreateResult =
+	{
+		getPageNumber: options.getPageNumber ??
+			((context) =>
 			{
-				currentPage = 1;
-			}
+				let currentPage = parseInt(context.fritterRequest.getSearchParams().get("page") ?? "1");
 
-			return currentPage;
-		});
+				if (isNaN(currentPage))
+				{
+					currentPage = 1;
+				}
 
-	return {
+				return currentPage;
+			}),
+
 		execute: async (context, next) =>
 		{
-			const currentPageNumber = getPageNumber(context);
-
-			context.currentPage = currentPageNumber;
+			const currentPageNumber = currentPageNumberMiddleware.getPageNumber(context);
 
 			context.currentPageNumber = currentPageNumber;
 
 			await next();
 		},
 	};
+
+	return currentPageNumberMiddleware;
 }
