@@ -12,6 +12,7 @@
 * refactor: made RouterMiddleware return its options
 * refactor: made StaticMiddleware return its options
 * fix: fixed a bug where the StaticMiddleware ignored query strings
+* refactor: new BodyParserMiddleware
 
 ## 2.1.0
 
