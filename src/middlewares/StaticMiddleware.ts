@@ -124,7 +124,7 @@ export function create(options: CreateOptions): CreateResult
 			//
 
 			// Note: Uses posix, even on Windows, so paths always use forward slashes.
-			let requestedFilePath = path.posix.normalize(decodeURIComponent(context.fritterRequest.getPath()));
+			let requestedFilePath = path.posix.normalize(decodeURIComponent(context.fritterRequest.getPath() + "?" + context.fritterRequest.getSearchParams().toString()));
 
 			if (path.basename(requestedFilePath) == ".")
 			{
