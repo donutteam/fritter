@@ -8,7 +8,7 @@ export * from "./classes/FritterRequest.js";
 export * from "./classes/FritterResponse.js";
 
 export * as BodyParserMiddleware from "./middlewares/body-parser.js";
-export * as CorsMiddleware from "./middlewares/cors.js";
+export * as CorsMiddleware from "./middlewares/CorsMiddleware.js";
 export * as CurrentPageMiddleware from "./middlewares/current-page-number.js"; // Deprecated, remove in v2.0.0, if that ever happens
 export * as CurrentPageNumberMiddleware from "./middlewares/current-page-number.js";
 export * as ForceSslMiddleware from "./middlewares/force-ssl.js";

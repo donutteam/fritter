@@ -19,21 +19,23 @@ export type CreateOptions =
 
 export type CreateResult =
 {
+	allowCredentialsOrigins: string[];
 	execute: MiddlewareFunction<MiddlewareFritterContext>;
 };
 
-export function create(options?: CreateOptions): CreateResult
+export function create(options: CreateOptions = {}): CreateResult
 {
-	const allowCredentialsOrigins = options?.allowCredentialsOrigins ?? [];
-
-	return {
+	const corsMiddleware: CreateResult =
+	{
+		allowCredentialsOrigins: options.allowCredentialsOrigins ?? [],
+		
 		execute: async (context, next) =>
 		{
 			const origin = context.fritterRequest.getHeaderValue("Origin");
 
 			context.fritterResponse.appendVaryHeaderName("Origin");
 
-			if (origin != null && allowCredentialsOrigins.includes(origin))
+			if (origin != null && corsMiddleware.allowCredentialsOrigins.includes(origin))
 			{
 				context.fritterResponse.setHeaderValue("Access-Control-Allow-Credentials", "true");
 				context.fritterResponse.setHeaderValue("Access-Control-Allow-Origin", origin);
@@ -55,4 +57,6 @@ export function create(options?: CreateOptions): CreateResult
 			await next();
 		},
 	};
+
+	return corsMiddleware;
 }
