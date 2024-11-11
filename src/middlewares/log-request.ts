@@ -10,32 +10,28 @@ import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 // Interfaces
 //
 
-export interface MiddlewareFritterContext extends FritterContext
-{
-	// No additional properties
-}
-
 //
 // Create Function
 //
 
-export interface CreateOptions
+export type MiddlewareFritterContext = FritterContext;
+
+export type CreateOptions =
 {
-	startMessage? : string;
+	startMessage?: string;
+	endMessage?: string;
+};
 
-	endMessage? : string;
-}
-
-export interface CreateResult
+export type CreateResult =
 {
-	execute : MiddlewareFunction<MiddlewareFritterContext>;
-}
+	execute: MiddlewareFunction<MiddlewareFritterContext>;
+};
 
-export function create(options? : CreateOptions) : CreateResult
+export function create(options: CreateOptions = {}): CreateResult
 {
-	let startMessageTemplate = options?.startMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | Start";
+	let startMessageTemplate = options.startMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | Start";
 
-	let endMessageTemplate = options?.endMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | End | Status Code: {{ STATUS_CODE }}";
+	let endMessageTemplate = options.endMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | End | Status Code: {{ STATUS_CODE }}";
 
 	let requestNumber = 0;
 

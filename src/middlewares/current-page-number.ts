@@ -7,32 +7,28 @@ import { FritterContext } from "../classes/FritterContext.js";
 import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
-// Interfaces
+// Middleware
 //
 
-export interface MiddlewareFritterContext extends FritterContext
+export type MiddlewareFritterContext = FritterContext &
 {
 	/** @deprecated */
-	currentPage : number;
+	currentPage: number;
 
-	currentPageNumber : number;
-}
+	currentPageNumber: number;
+};
 
-//
-// Create Function
-//
-
-export interface CreateOptions
+export type CreateOptions =
 {
-	getPageNumber? : (context : MiddlewareFritterContext) => number;
-}
+	getPageNumber?: (context: MiddlewareFritterContext) => number;
+};
 
-export interface CreateResult
+export type CreateResult =
 {
-	execute : MiddlewareFunction<MiddlewareFritterContext>;
-}
+	execute: MiddlewareFunction<MiddlewareFritterContext>;
+};
 
-export function create(options : CreateOptions = {}) : CreateResult
+export function create(options: CreateOptions = {}): CreateResult
 {
 	const getPageNumber = options.getPageNumber ??
 		((context) =>

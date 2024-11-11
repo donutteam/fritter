@@ -17,45 +17,37 @@ import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js
 //
 
 /** Options for a Fritter instance. */
-export interface FritterOptions
+export type FritterOptions =
 {
 	/** The name of the header containing one or more IP addresses of proxies. */
-	proxyIpHeaderName? : string;
+	proxyIpHeaderName?: string;
 
 	/** The amount of segments in the hostname that are considered the base domain. */
-	subdomainOffset? : number;
+	subdomainOffset?: number;
 
 	/** Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers. */
-	trustProxyHeaders? : boolean;
-}
+	trustProxyHeaders?: boolean;
+};
 
 /** A web server. */
 export class Fritter
 {
 	/** The options for this Fritter instance. */
-	public readonly options : FritterOptions;
+	options: FritterOptions;
 
 	/** The middleware stack. */
-	public readonly middlewareStack : MiddlewareFunction[];
+	middlewareStack: MiddlewareFunction[];
 
 	/** The underlying Node.js HTTP server. */
-	public httpServer : http.Server;
+	httpServer: http.Server;
 
 	/** An HTTPS server. */
-	public httpsServer : https.Server;
+	httpsServer: https.Server;
 
 	/** Constructs a new Fritter instance. */
-	constructor(options : FritterOptions = {})
+	constructor(options: FritterOptions = {})
 	{
-		//
-		// Default Options
-		//
-
 		options.trustProxyHeaders ??= false;
-
-		//
-		// Initialise Class
-		//
 
 		this.options = options;
 
@@ -63,12 +55,111 @@ export class Fritter
 	}
 
 	/**
-	 * Handles an incoming HTTP request.
+	 * Starts an HTTP server on the specified port.
 	 *
-	 * @param request A Node.js HTTP request.
-	 * @param response A Node.js HTTP response.
+	 * @param port The port to listen on.
 	 */
-	private async handleRequest(request : http.IncomingMessage, response : http.ServerResponse)
+	async startHttp(port: number)
+	{
+		this.httpServer = http.createServer(this.#handleRequest.bind(this));
+
+		return new Promise<void>(
+			(resolve, reject) =>
+			{
+				this.httpServer.listen(port, () => resolve());
+
+				this.httpServer.on("error", (error) => reject(error));
+			});
+	}
+
+	/**
+	 * Starts an HTTPS server on the specified port.
+	 *
+	 * @param port
+	 * @param options
+	 */
+	async startHttps(port: number, options: https.ServerOptions)
+	{
+		this.httpsServer = https.createServer(options, this.#handleRequest.bind(this));
+
+		return new Promise<void>(
+			(resolve, reject) =>
+			{
+				this.httpsServer.listen(port, () => resolve());
+
+				this.httpsServer.on("error", (error) => reject(error));
+			});
+	}
+
+	/**
+	 * Stops the HTTP server.
+	 */
+	async stopHttp()
+	{
+		return new Promise<void>(
+			(resolve, reject) =>
+			{
+				if (this.httpServer == null)
+				{
+					resolve();
+
+					return;
+				}
+
+				this.httpServer.close((error) =>
+				{
+					if (error)
+					{
+						reject(error);
+					}
+					else
+					{
+						resolve();
+					}
+				});
+			});
+	}
+
+	/**
+	 * Stops the HTTPS server.
+	 */
+	async stopHttps()
+	{
+		return new Promise<void>(
+			(resolve, reject) =>
+			{
+				if (this.httpsServer == null)
+				{
+					resolve();
+
+					return;
+				}
+
+				this.httpsServer.close((error) =>
+				{
+					if (error)
+					{
+						reject(error);
+					}
+					else
+					{
+						resolve();
+					}
+				});
+			});
+	}
+
+	/**
+	 * Adds a middleware to the stack.
+	 *
+	 * @param fritterMiddleware A Fritter middleware function.
+	 */
+	use<Type extends FritterContext = FritterContext>(fritterMiddleware: MiddlewareFunction<Type>)
+	{
+		this.middlewareStack.push(fritterMiddleware as MiddlewareFunction);
+	}
+
+	async #handleRequest(request: http.IncomingMessage, response: http.ServerResponse)
 	{
 		//
 		// Set Default Status Code (404)
@@ -225,106 +316,5 @@ export class Fritter
 
 			response.end(bodyString);
 		}
-	}
-
-	/**
-	 * Starts an HTTP server on the specified port.
-	 *
-	 * @param port The port to listen on.
-	 */
-	public async startHttp(port : number) : Promise<void>
-	{
-		this.httpServer = http.createServer(this.handleRequest.bind(this));
-
-		return new Promise((resolve, reject) =>
-		{
-			this.httpServer.listen(port, () => resolve());
-
-			this.httpServer.on("error", (error) => reject(error));
-		});
-	}
-
-	/**
-	 * Starts an HTTPS server on the specified port.
-	 *
-	 * @param port
-	 * @param options
-	 */
-	public async startHttps(port : number, options : https.ServerOptions) : Promise<void>
-	{
-		this.httpsServer = https.createServer(options, this.handleRequest.bind(this));
-
-		return new Promise((resolve, reject) =>
-		{
-			this.httpsServer.listen(port, () => resolve());
-
-			this.httpsServer.on("error", (error) => reject(error));
-		});
-	}
-
-	/**
-	 * Stops the HTTP server.
-	 */
-	public async stopHttp() : Promise<void>
-	{
-		return new Promise((resolve, reject) =>
-		{
-			if (this.httpServer == null)
-			{
-				resolve();
-
-				return;
-			}
-
-			this.httpServer.close((error) =>
-			{
-				if (error)
-				{
-					reject(error);
-				}
-				else
-				{
-					resolve();
-				}
-			});
-		});
-	}
-
-	/**
-	 * Stops the HTTPS server.
-	 */
-	public async stopHttps() : Promise<void>
-	{
-		return new Promise((resolve, reject) =>
-		{
-			if (this.httpsServer == null)
-			{
-				resolve();
-
-				return;
-			}
-
-			this.httpsServer.close((error) =>
-			{
-				if (error)
-				{
-					reject(error);
-				}
-				else
-				{
-					resolve();
-				}
-			});
-		});
-	}
-
-	/**
-	 * Adds a middleware to the stack.
-	 *
-	 * @param fritterMiddleware A Fritter middleware function.
-	 */
-	public use<Type extends FritterContext = FritterContext>(fritterMiddleware : MiddlewareFunction<Type>) : void
-	{
-		this.middlewareStack.push(fritterMiddleware as MiddlewareFunction);
 	}
 }

@@ -43,14 +43,14 @@ export interface File
 	type : string;
 }
 
+//
+// Middleware
+//
+
 export interface MiddlewareFritterContext extends FritterContext
 {
 
 }
-
-//
-// Create Function
-//
 
 export interface CreateOptions
 {

@@ -8,62 +8,53 @@ import url from "node:url";
 
 import { Key, pathToRegexp, ParseOptions, TokensToRegexpOptions } from "path-to-regexp";
 
-import type { FritterContext } from "../classes/FritterContext.js";
+import { FritterContext } from "../classes/FritterContext.js";
 
-import type { HTTPMethod } from "../types/HTTPMethod.js";
-import type { MiddlewareFunction } from "../types/MiddlewareFunction.js";
-
-//
-// Interfaces
-//
-
-export interface MiddlewareFritterContext extends FritterContext
-{
-	routeParameters : { [key : string] : string };
-}
-
-export interface Route<RouteFritterContext extends MiddlewareFritterContext = MiddlewareFritterContext>
-{
-	method : HTTPMethod | "ALL";
-
-	path : string;
-
-	middlewares? : MiddlewareFunction<RouteFritterContext>[];
-
-	handler : MiddlewareFunction<RouteFritterContext>;
-}
+import { HTTPMethod } from "../types/HTTPMethod.js";
+import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
-// Create Function
+// Types
 //
 
-export interface CreateOptions
+export type Route<RouteFritterContext extends MiddlewareFritterContext = MiddlewareFritterContext> =
 {
-	pathToRegexpOptions? : TokensToRegexpOptions & ParseOptions;
+	method: HTTPMethod | "ALL";
+	path: string;
+	middlewares?: MiddlewareFunction<RouteFritterContext>[];
+	handler: MiddlewareFunction<RouteFritterContext>;
+};
 
-	routes? : Route[];
-}
+//
+// Middleware
+//
 
-export interface CreateResult
+export type MiddlewareFritterContext = FritterContext &
 {
-	execute : MiddlewareFunction<MiddlewareFritterContext>;
+	routeParameters: Record<string, string>;
+};
 
-	getRoutes : () => Route[];
-
-	addRoute : (route : Route) => void;
-
-	loadRoutesDirectory : (directoryPath : string) => Promise<Route[]>;
-
-	loadRoutesFile : (filePath : string) => Promise<Route[]>;
-
-	removeRoute : (route : Route) => void;
-}
-
-export function create(options? : CreateOptions) : CreateResult
+export type CreateOptions =
 {
-	const pathToRegexpOptions = options?.pathToRegexpOptions ?? {};
+	pathToRegexpOptions?: TokensToRegexpOptions & ParseOptions;
+	routes?: Route[];
+};
 
-	const routes: Route[] = options?.routes ?? [];
+export type CreateResult =
+{
+	execute: MiddlewareFunction<MiddlewareFritterContext>;
+	getRoutes: () => Route[];
+	addRoute: (route : Route) => void;
+	loadRoutesDirectory: (directoryPath: string) => Promise<Route[]>;
+	loadRoutesFile: (filePath: string) => Promise<Route[]>;
+	removeRoute: (route: Route) => void;
+};
+
+export function create(options: CreateOptions = {}): CreateResult
+{
+	const pathToRegexpOptions = options.pathToRegexpOptions ?? {};
+
+	const routes: Route[] = options.routes ?? [];
 
 	const execute: CreateResult["execute"] = async (context, next) =>
 	{
@@ -128,10 +119,10 @@ export function create(options? : CreateOptions) : CreateResult
 			let currentIndex = -1;
 
 			const middlewares =
-				[
-					...route.middlewares ?? [],
-					route.handler,
-				];
+			[
+				...route.middlewares ?? [],
+				route.handler,
+			];
 
 			const executeMiddleware = async () =>
 			{
@@ -161,23 +152,23 @@ export function create(options? : CreateOptions) : CreateResult
 		await next();
 	};
 
-	const getRoutes : CreateResult["getRoutes"] = () =>
+	const getRoutes: CreateResult["getRoutes"] = () =>
 	{
 		return [ ...routes ];
 	};
 
-	const addRoute : CreateResult["addRoute"] = (route) =>
+	const addRoute: CreateResult["addRoute"] = (route) =>
 	{
 		routes.push(route);
 	}
 
-	const loadRoutesFile : CreateResult["loadRoutesFile"] = async (filePath) =>
+	const loadRoutesFile: CreateResult["loadRoutesFile"] = async (filePath) =>
 	{
 		const routeContainer = await import(url.pathToFileURL(filePath).toString()) as
-			{
-				route? : Route | Route[],
-				routes? : Route | Route[],
-			};
+		{
+			route?: Route | Route[],
+			routes?: Route | Route[],
+		};
 
 		const routeOrRoutes = routeContainer.route ?? routeContainer.routes;
 
@@ -203,9 +194,9 @@ export function create(options? : CreateOptions) : CreateResult
 		}
 	};
 
-	const loadRoutesDirectory : CreateResult["loadRoutesDirectory"] = async (directoryPath) =>
+	const loadRoutesDirectory: CreateResult["loadRoutesDirectory"] = async (directoryPath) =>
 	{
-		const directoryRoutes : Route[] = [];
+		const directoryRoutes: Route[] = [];
 
 		const directoryEntries = await fs.promises.readdir(directoryPath,
 			{
@@ -240,7 +231,7 @@ export function create(options? : CreateOptions) : CreateResult
 		return directoryRoutes;
 	};
 
-	const removeRoute : CreateResult["removeRoute"] = (route) =>
+	const removeRoute: CreateResult["removeRoute"] = (route) =>
 	{
 		const index = routes.indexOf(route);
 

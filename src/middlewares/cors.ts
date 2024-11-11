@@ -7,29 +7,22 @@ import { FritterContext } from "../classes/FritterContext.js";
 import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
 //
-// Interfaces
+// Middleware
 //
 
-export interface MiddlewareFritterContext extends FritterContext
+export type MiddlewareFritterContext = FritterContext;
+
+export type CreateOptions =
 {
-	// No additional properties
-}
+	allowCredentialsOrigins?: string[];
+};
 
-//
-// Create Function
-//
-
-export interface CreateOptions
+export type CreateResult =
 {
-	allowCredentialsOrigins? : string[];
-}
+	execute: MiddlewareFunction<MiddlewareFritterContext>;
+};
 
-export interface CreateResult
-{
-	execute : MiddlewareFunction<MiddlewareFritterContext>;
-}
-
-export function create(options? : CreateOptions) : CreateResult
+export function create(options?: CreateOptions): CreateResult
 {
 	const allowCredentialsOrigins = options?.allowCredentialsOrigins ?? [];
 

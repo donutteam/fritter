@@ -2,7 +2,7 @@
 // Function
 //
 
-export function encodeHtml(rawString : string) : string
+export function encodeHtml(rawString: string)
 {
 	return rawString.replace(/[<>&"']/g, (char) =>
 	{

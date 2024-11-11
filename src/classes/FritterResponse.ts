@@ -3,7 +3,6 @@
 //
 
 import http from "node:http";
-import net from "node:net";
 import path from "node:path";
 import stream from "node:stream";
 
@@ -26,40 +25,36 @@ import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js
 //
 
 /** Options for a FritterResponse's redirect method. */
-export interface FritterResponseRedirectOptions
+export type FritterResponseRedirectOptions =
 {
 	/** The status code to use for the redirect. */
-	statusCode? : 300 | 301 | 302 | 303 | 305 | 307 | 308;
+	statusCode?: 300 | 301 | 302 | 303 | 305 | 307 | 308;
 
 	/** The URL to redirect to if there was no referer. */
-	fallbackRedirectUrl? : string;
-}
+	fallbackRedirectUrl?: string;
+};
 
-/** A Fritter response. */
+/** An object containing information about the response. */
 export class FritterResponse
 {
 	/** The Fritter instance that created this request. */
-	public fritter : Fritter;
+	fritter: Fritter;
 
 	/** The Fritter context. */
-	public fritterContext : FritterContext;
+	fritterContext: FritterContext;
 
 	/** The raw Node.js HTTP request. */
-	public nodeRequest : http.IncomingMessage;
+	nodeRequest: http.IncomingMessage;
 
 	/** The raw Node.js HTTP response. */
-	public nodeResponse : http.ServerResponse;
+	nodeResponse: http.ServerResponse;
 
-	/** The response body. */
-	#body : string | Buffer | object | stream.Stream | null = null;
+	#body: string | Buffer | object | stream.Stream | null = null;
 
-	/** Whether the response body has been explicitly set to null. */
 	#hasExplicitlyNullBody = false;
 
-	/** Whether the content type has been explicitly set. */
 	#hasExplicitlySetContentType = false;
 
-	/** Whether the status code has been explicitly set. */
 	#hasExplicitlySetStatusCode = false;
 
 	/**
@@ -70,12 +65,8 @@ export class FritterResponse
 	 * @param nodeRequest A Node.js HTTP request.
 	 * @param nodeResponse A Node.js HTTP response.
 	 */
-	constructor(fritter : Fritter, fritterContext : FritterContext, nodeRequest : http.IncomingMessage, nodeResponse : http.ServerResponse)
+	constructor(fritter: Fritter, fritterContext: FritterContext, nodeRequest: http.IncomingMessage, nodeResponse: http.ServerResponse)
 	{
-		//
-		// Store Arguments
-		//
-
 		this.fritter = fritter;
 
 		this.fritterContext = fritterContext;
@@ -86,7 +77,7 @@ export class FritterResponse
 	}
 
 	/** Appends a value to the given header. */
-	public appendHeaderValue(headerName : string, value : string) : void
+	appendHeaderValue(headerName: string, value: string)
 	{
 		const currentValues = this.getHeaderValueArray(headerName);
 
@@ -101,19 +92,19 @@ export class FritterResponse
 	}
 
 	/** Appends a header name to the Vary header. */
-	public appendVaryHeaderName(headerName : string) : void
+	appendVaryHeaderName(headerName: string)
 	{
 		vary(this.nodeResponse, headerName);
 	}
 
 	/** Gets the response body. */
-	public getBody() : string | Buffer | object | stream.Stream | null
+	getBody()
 	{
 		return this.#body;
 	}
 
 	/** Gets the content length of the response body. */
-	public getContentLength() : number | null
+	getContentLength()
 	{
 		const contentLengthHeader = this.getHeaderValue("Content-Length");
 
@@ -135,7 +126,7 @@ export class FritterResponse
 	}
 
 	/** Gets the content type of the request. */
-	public getContentType() : string | null
+	getContentType()
 	{
 		const contentTypeHeader = this.getHeaderValue("Content-Type");
 
@@ -158,7 +149,7 @@ export class FritterResponse
 	}
 
 	/** Gets the ETag header of the response. */
-	public getEntityTag() : string | null
+	getEntityTag()
 	{
 		return this.getHeaderValue("ETag");
 	}
@@ -170,7 +161,7 @@ export class FritterResponse
 	 *
 	 * Otherwise, returns the type of the request body.
 	 */
-	public getFirstMatchingType(types : string[]) : string | false | null
+	getFirstMatchingType(types: string[])
 	{
 		return typeIs.is(this.getContentType() ?? "", ...types);
 	}
@@ -181,7 +172,7 @@ export class FritterResponse
 	 * @param headerName The name of the header to get the value of. This is case-insensitive.
 	 * @returns The first value of the given header, or null if the header does not exist.
 	 */
-	public getHeaderValue(headerName : string) : string | null
+	getHeaderValue(headerName: string)
 	{
 		//
 		// Convert Header Name to Lowercase
@@ -223,7 +214,7 @@ export class FritterResponse
 	 * @param headerName The name of the header to get the values of. This is case-insensitive.
 	 * @returns An array of all values of the given header, or an empty array if the header does not exist.
 	 */
-	public getHeaderValueArray(headerName : string) : string[]
+	getHeaderValueArray(headerName: string)
 	{
 		const headerValue = this.nodeResponse.getHeaders()[headerName.toLowerCase()];
 
@@ -241,7 +232,7 @@ export class FritterResponse
 	}
 
 	/** Gets the last modified date of the response. */
-	public getLastModified() : Date | null
+	getLastModified()
 	{
 		const lastModifiedHeader = this.getHeaderValue("Last-Modified");
 
@@ -254,31 +245,31 @@ export class FritterResponse
 	}
 
 	/** Gets the socket of the response. */
-	public getSocket() : net.Socket | null
+	getSocket()
 	{
 		return this.nodeResponse.socket;
 	}
 
 	/** Gets the response status code. */
-	public getStatusCode() : number
+	getStatusCode()
 	{
 		return this.nodeResponse.statusCode;
 	}
 
 	/** Gets whether the response body has been explicitly set to null. */
-	public hasExplicitlyNullBody() : boolean
+	hasExplicitlyNullBody()
 	{
 		return this.#hasExplicitlyNullBody;
 	}
 
 	/** Gets whether the content type has been explicitly set. */
-	public hasExplicitlySetContentType() : boolean
+	hasExplicitlySetContentType()
 	{
 		return this.#hasExplicitlySetContentType;
 	}
 
 	/** Checks if the response is still writable. */
-	public isWritable() : boolean
+	isWritable()
 	{
 		if (this.nodeResponse.writableEnded)
 		{
@@ -294,25 +285,25 @@ export class FritterResponse
 	}
 
 	/** Gets whether the response body has been explicitly set. */
-	public hasExplicitlySetStatusCode() : boolean
+	hasExplicitlySetStatusCode()
 	{
 		return this.#hasExplicitlySetStatusCode;
 	}
 
 	/** Gets whether the response currently contains the given header. */
-	public hasHeaderValues(headerName : string) : boolean
+	hasHeaderValues(headerName: string)
 	{
 		return this.nodeResponse.hasHeader(headerName);
 	}
 
 	/** Gets whether the response headers have been sent. */
-	public hasSentHeaders() : boolean
+	hasSentHeaders()
 	{
 		return this.nodeResponse.headersSent;
 	}
 
 	/** Removes the given response header, if it exists. */
-	public removeHeaderValue(name : string) : void
+	removeHeaderValue(name: string)
 	{
 		if (this.hasSentHeaders())
 		{
@@ -323,7 +314,7 @@ export class FritterResponse
 	}
 
 	/** Sets the response body. */
-	public setBody(body : string | Buffer | object | stream.Stream | null) : void
+	setBody(body: string | Buffer | object | stream.Stream | null)
 	{
 		const original = this.#body;
 
@@ -388,10 +379,11 @@ export class FritterResponse
 
 			if (original !== this.#body)
 			{
-				body.once("error", (error) =>
-				{
-					throw error;
-				});
+				body.once("error", 
+					(error) =>
+					{
+						throw error;
+					});
 			}
 
 			this.removeHeaderValue("Content-Length");
@@ -399,7 +391,7 @@ export class FritterResponse
 	}
 
 	/** Sets the Content-Disposition header of the response. */
-	public setContentDisposition(fileName : string | undefined, options : contentDisposition.Options | undefined) : void
+	setContentDisposition(fileName: string | undefined, options: contentDisposition.Options | undefined)
 	{
 		if (fileName != undefined)
 		{
@@ -410,7 +402,7 @@ export class FritterResponse
 	}
 
 	/** Sets the Content-Length header of the response. */
-	public setContentLength(length : number | null) : void
+	setContentLength(length : number | null)
 	{
 		const transferEncodingHeaderValue = this.getHeaderValue("Transfer-Encoding");
 
@@ -430,7 +422,7 @@ export class FritterResponse
 	}
 
 	/** Sets the Content-Type header of the response. */
-	public setContentType(type : string | null) : void
+	setContentType(type : string | null)
 	{
 		if (type == null)
 		{
@@ -452,7 +444,7 @@ export class FritterResponse
 	}
 
 	/** Sets the ETag header of the response. */
-	public setEntityTag(entityTag : string) : void
+	setEntityTag(entityTag : string)
 	{
 		if (!/^(W\/)?"/.test(entityTag))
 		{
@@ -467,7 +459,7 @@ export class FritterResponse
 	 *
 	 * Supplying an array of values will set multiple headers with the same name.
 	 */
-	public setHeaderValue(name : string, value : string | string[]) : void
+	setHeaderValue(name: string, value: string | string[])
 	{
 		if (this.hasSentHeaders())
 		{
@@ -478,7 +470,7 @@ export class FritterResponse
 	}
 
 	/** Sets the Last-Modified header of the response. */
-	public setLastModified(date : Date) : void
+	setLastModified(date: Date)
 	{
 		this.setHeaderValue("Last-Modified", date.toUTCString());
 	}
@@ -488,7 +480,7 @@ export class FritterResponse
 	 *
 	 * You can also use the special URL "back" to redirect to the previous page, if the client sent a Referer header.
 	 */
-	public setRedirect(url : string, options : FritterResponseRedirectOptions = {}) : void
+	setRedirect(url: string, options: FritterResponseRedirectOptions = {})
 	{
 		//
 		// Default Options
@@ -540,7 +532,7 @@ export class FritterResponse
 	}
 
 	/** Sets the response status code. */
-	public setStatusCode(statusCode : number) : void
+	setStatusCode(statusCode: number)
 	{
 		if (this.hasSentHeaders())
 		{

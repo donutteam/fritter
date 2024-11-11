@@ -2,9 +2,9 @@
 // Imports
 //
 
-import type http from "node:http";
+import http from "node:http";
 import net from "node:net";
-import type tls from "node:tls";
+import tls from "node:tls";
 
 import accepts from "accepts";
 import contentType from "content-type";
@@ -20,46 +20,36 @@ import { HTTPMethod } from "../types/HTTPMethod.js";
 // Class
 //
 
-export type FritterRequestProtocol = "http" | "https";
-
-/** A Fritter request. */
+/** An object containing information about the request. */
 export class FritterRequest
 {
 	/** The Fritter instance that created this request. */
-	public fritter : Fritter;
+	fritter: Fritter;
 
 	/** The Fritter context. */
-	public fritterContext : FritterContext;
+	fritterContext: FritterContext;
 
 	/** The raw Node.js HTTP request. */
-	public nodeRequest : http.IncomingMessage;
+	nodeRequest: http.IncomingMessage;
 
 	/** The raw Node.js HTTP response. */
-	public nodeResponse : http.ServerResponse;
+	nodeResponse: http.ServerResponse;
 
-	/** Internal storage for the accepts property. */
-	#accepts : accepts.Accepts;
+	#accepts: accepts.Accepts;
 
-	/** Internal storage for the contentLength property. */
-	#contentLength : number;
+	#contentLength: number;
 
-	/** Internal storage for the httpMethod property. */
-	#httpMethod : HTTPMethod;
+	#httpMethod: HTTPMethod;
 
-	/** Internal storage for the ip property. */
-	#ip : string;
+	#ip: string;
 
-	/** Internal storage for the ips property. */
-	#ips : string[];
+	#ips: string[];
 
-	/** Internal storage for the host property. */
-	#host : string | null;
+	#host: string | null;
 
-	/** Internal storage for the protocol property. */
-	#protocol : FritterRequestProtocol;
+	#protocol: "http" | "https";
 
-	/** Internal storage for the url property. */
-	#url : URL;
+	#url: URL;
 
 	/**
 	 * Constructs a new Fritter request using the given Node.js HTTP request.
@@ -69,12 +59,8 @@ export class FritterRequest
 	 * @param nodeRequest A Node.js HTTP request.
 	 * @param nodeResponse A Node.js HTTP response.
 	 */
-	constructor(fritter : Fritter, fritterContext : FritterContext, nodeRequest : http.IncomingMessage, nodeResponse : http.ServerResponse)
+	constructor(fritter: Fritter, fritterContext: FritterContext, nodeRequest: http.IncomingMessage, nodeResponse: http.ServerResponse)
 	{
-		//
-		// Store Arguments
-		//
-
 		this.fritter = fritter;
 
 		this.fritterContext = fritterContext;
@@ -85,7 +71,7 @@ export class FritterRequest
 	}
 
 	/** Gets the Accepts object for this request. */
-	public getAccepts()
+	getAccepts()
 	{
 		if (this.#accepts === undefined)
 		{
@@ -96,7 +82,7 @@ export class FritterRequest
 	}
 
 	/** Gets the charset of the request's content type. */
-	public getCharset() : string | null
+	getCharset()
 	{
 		try
 		{
@@ -111,7 +97,7 @@ export class FritterRequest
 	}
 
 	/** Gets the content length of the request. */
-	public getContentLength() : number
+	getContentLength()
 	{
 		if (this.#contentLength === undefined)
 		{
@@ -133,7 +119,7 @@ export class FritterRequest
 	}
 
 	/** Gets the content type of the request. */
-	public getContentType() : string | null
+	getContentType()
 	{
 		const contentTypeHeader = this.getHeaderValue("Content-Type");
 
@@ -162,7 +148,7 @@ export class FritterRequest
 	 *
 	 * Otherwise, returns the type of the request body.
 	 */
-	public getFirstMatchingType(types : string[]) : string | false | null
+	getFirstMatchingType(types: string[])
 	{
 		return typeIs.is(this.getContentType() ?? "", ...types);
 	}
@@ -173,7 +159,7 @@ export class FritterRequest
 	 * @param headerName The name of the header to get the value of. This is case-insensitive.
 	 * @returns The first value of the given header, or null if the header does not exist.
 	 */
-	public getHeaderValue(headerName : string) : string | null
+	getHeaderValue(headerName: string)
 	{
 		//
 		// Convert Header Name to Lowercase
@@ -215,7 +201,7 @@ export class FritterRequest
 	 * @param headerName The name of the header to get the values of. This is case-insensitive.
 	 * @returns An array of all values of the given header, or an empty array if the header does not exist.
 	 */
-	public getHeaderValueArray(headerName : string) : string[]
+	getHeaderValueArray(headerName: string)
 	{
 		const headerValue = this.nodeRequest.headers[headerName.toLowerCase()];
 
@@ -233,7 +219,7 @@ export class FritterRequest
 	}
 
 	/** Gets the HTTP method of the request. */
-	public getHttpMethod() : HTTPMethod
+	getHttpMethod()
 	{
 		if (this.#httpMethod === undefined)
 		{
@@ -244,7 +230,7 @@ export class FritterRequest
 	}
 
 	/** Gets the host of the request. */
-	public getHost() : string | null
+	getHost()
 	{
 		if (this.#host === undefined)
 		{
@@ -268,7 +254,7 @@ export class FritterRequest
 	}
 
 	/** Gets the hostname (host without port) of the request. */
-	public getHostName() : string | null
+	getHostName()
 	{
 		const host = this.getHost();
 
@@ -288,13 +274,13 @@ export class FritterRequest
 	}
 
 	/** Gets the full href of the request. */
-	public getHref() : string
+	getHref()
 	{
 		return this.getUrl().href;
 	}
 
 	/** Gets the IP address of the request. */
-	public getIp() : string
+	getIp()
 	{
 		if (this.#ip === undefined)
 		{
@@ -305,7 +291,7 @@ export class FritterRequest
 	}
 
 	/** Gets the IP address chain of the request, starting with the client IP. */
-	public getIpChain() : string[]
+	getIpChain()
 	{
 		if (this.#ips === undefined)
 		{
@@ -323,28 +309,28 @@ export class FritterRequest
 		if (this.#ips === undefined)
 		{
 			this.#ips =
-				[
-					this.nodeRequest.socket.remoteAddress ?? "",
-				];
+			[
+				this.nodeRequest.socket.remoteAddress ?? "",
+			];
 		}
 
 		return this.#ips;
 	}
 
 	/** Gets the origin of the request. */
-	public getOrigin() : string | null
+	getOrigin()
 	{
 		return this.getProtocol() + "://" + this.getHost();
 	}
 
 	/** Gets the path of the request, without the query string. */
-	public getPath() : string
+	getPath()
 	{
 		return this.getUrl().pathname;
 	}
 
 	/** The protocol of the request. */
-	public getProtocol() : FritterRequestProtocol
+	getProtocol()
 	{
 		if (this.#protocol === undefined)
 		{
@@ -388,19 +374,19 @@ export class FritterRequest
 	}
 
 	/** Gets the query parameters of the request. */
-	public getSearchParams() : URLSearchParams
+	getSearchParams()
 	{
 		return this.getUrl().searchParams;
 	}
 
 	/** Gets the socket of the request. */
-	public getSocket() : net.Socket
+	getSocket()
 	{
 		return this.nodeRequest.socket;
 	}
 
 	/** Gets the subdomains of the request. */
-	public getSubdomains() : string[]
+	getSubdomains()
 	{
 		const hostName = this.getHostName();
 
@@ -420,7 +406,7 @@ export class FritterRequest
 	}
 
 	/** A URL object representing the URL of the request. */
-	public getUrl() : URL
+	getUrl()
 	{
 		if (this.#url === undefined)
 		{
@@ -431,13 +417,13 @@ export class FritterRequest
 	}
 
 	/** Returns true if the request has a body. */
-	public hasBody() : boolean
+	hasBody()
 	{
 		return typeIs.hasBody(this.nodeRequest);
 	}
 
 	/** Returns true if the client has an up-to-date copy of the resource. */
-	public isFresh() : boolean
+	isFresh()
 	{
 		const method = this.getHttpMethod();
 
@@ -457,7 +443,7 @@ export class FritterRequest
 	}
 
 	/** Returns true if the request is idempotent. */
-	public isIdempotent() : boolean
+	isIdempotent()
 	{
 		const method = this.getHttpMethod();
 
@@ -465,49 +451,49 @@ export class FritterRequest
 	}
 
 	/** Returns true if the request is secure. */
-	public isSecure() : boolean
+	isSecure()
 	{
 		return this.getProtocol() == "https";
 	}
 
 	/** Returns true if the client has an out-of-date copy of the resource. */
-	public isStale() : boolean
+	isStale()
 	{
 		return !this.isFresh();
 	}
 
 	/** Sets the content length of the request. */
-	public setContentLength(value : number) : void
+	setContentLength(value: number)
 	{
 		this.#contentLength = value;
 	}
 
 	/** Sets the HTTP method of the request. */
-	public setHttpMethod(method : HTTPMethod) : void
+	setHttpMethod(method: HTTPMethod)
 	{
 		this.#httpMethod = method;
 	}
 
 	/** Sets the host of the request. */
-	public setHost(value : string | null) : void
+	setHost(value: string | null)
 	{
 		this.#host = value;
 	}
 
 	/** Sets the IP address of the request. */
-	public setIp(value : string) : void
+	setIp(value: string)
 	{
 		this.#ip = value;
 	}
 
 	/** Sets the protocol of the request. */
-	public setProtocol(protocol : FritterRequestProtocol) : void
+	setProtocol(protocol: "http" | "https")
 	{
 		this.#protocol = protocol;
 	}
 
 	/** Sets the URL of the request. */
-	public setUrl(url : URL) : void
+	setUrl(url: URL)
 	{
 		this.#url = url;
 	}

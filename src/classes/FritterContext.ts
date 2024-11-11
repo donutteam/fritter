@@ -14,30 +14,28 @@ import { FritterResponse } from "./FritterResponse.js";
 // Class
 //
 
-/**
- * A Fritter context.
- */
+/** An object containing information about the request and the response. */
 export class FritterContext
 {
 	/**
 	 * The Fritter instance that created this context.
 	 */
-	public fritter : Fritter;
+	fritter: Fritter;
 
 	/** The Fritter request. */
-	public fritterRequest : FritterRequest;
+	fritterRequest: FritterRequest;
 
 	/** The Fritter response. */
-	public fritterResponse : FritterResponse;
+	fritterResponse: FritterResponse;
 
 	/** The raw Node.js HTTP request. */
-	public nodeRequest : http.IncomingMessage;
+	nodeRequest: http.IncomingMessage;
 
 	/** The raw Node.js HTTP response. */
-	public nodeResponse : http.ServerResponse;
+	nodeResponse: http.ServerResponse;
 
 	/** The cookies for this request. */
-	public cookies : Cookies;
+	cookies: Cookies;
 
 	/**
 	 * Constructs a new Fritter context.
@@ -46,7 +44,7 @@ export class FritterContext
 	 * @param request A Node.js HTTP request.
 	 * @param response A Node.js HTTP response.
 	 */
-	constructor(fritter : Fritter, request : http.IncomingMessage, response : http.ServerResponse)
+	constructor(fritter: Fritter, request: http.IncomingMessage, response: http.ServerResponse)
 	{
 		this.fritter = fritter;
 
