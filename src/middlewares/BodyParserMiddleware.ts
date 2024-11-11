@@ -183,19 +183,27 @@ export function create(options: CreateOptions = {}): CreateResult
 					case "application/x-www-form-urlencoded":
 					case "multipart/form-data":
 					{
-						return await parseFormData(context.fritterRequest.nodeRequest, bodyParserMiddleware.formidableOptions);
+						requestBody = await parseFormData(context.fritterRequest.nodeRequest, bodyParserMiddleware.formidableOptions);
+
+						break;
 					}
 
 					case "application/json":
 					{
-						return await parseJson(context.fritterRequest.nodeRequest);
+						requestBody = await parseJson(context.fritterRequest.nodeRequest);
+
+						break;
 					}
 
 					default:
 					{
-						return {};
+						requestBody = {};
+
+						break;
 					}
 				}
+
+				return requestBody;
 			};
 
 			await next();
