@@ -65,7 +65,7 @@ export class Fritter
 	 *
 	 * @param port The port to listen on.
 	 */
-	async startHttp(port: number)
+	async start(port: number)
 	{
 		return new Promise<void>(
 			(resolve, reject) =>
@@ -79,7 +79,7 @@ export class Fritter
 	/**
 	 * Stops the HTTP server.
 	 */
-	async stopHttp()
+	async stop()
 	{
 		return new Promise<void>(
 			(resolve, reject) =>
