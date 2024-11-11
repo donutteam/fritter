@@ -56,6 +56,8 @@ export class Fritter
 		this.trustProxyHeaders = options.trustProxyHeaders ?? false;
 
 		this.middlewareStack = [];
+
+		this.server = http.createServer(this.#handleRequest.bind(this));
 	}
 
 	/**
@@ -65,8 +67,6 @@ export class Fritter
 	 */
 	async startHttp(port: number)
 	{
-		this.server = http.createServer(this.#handleRequest.bind(this));
-
 		return new Promise<void>(
 			(resolve, reject) =>
 			{

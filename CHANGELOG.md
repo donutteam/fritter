@@ -14,6 +14,7 @@
 * fix: fixed a bug where the StaticMiddleware ignored query strings
 * refactor: new BodyParserMiddleware
 * refactor: simplified tsconfig
+* refactor: changed Fritter class to create the server in its constructor
 
 ## 2.1.0
 
