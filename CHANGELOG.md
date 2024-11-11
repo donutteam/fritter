@@ -1,3 +1,7 @@
+## 3.0.1
+
+* docs: updated readme
+
 ## 3.0.0
 
 * chore: updated packages
