@@ -18,38 +18,39 @@ export type MiddlewareFritterContext = FritterContext;
 
 export type CreateOptions =
 {
-	startMessage?: string;
-	endMessage?: string;
+	startMessageTemplate?: string;
+	endMessageTemplate?: string;
 };
 
 export type CreateResult =
 {
+	startMessageTemplate: string;
+	endMessageTemplate: string;
+	requestNumber: number;
 	execute: MiddlewareFunction<MiddlewareFritterContext>;
 };
 
 export function create(options: CreateOptions = {}): CreateResult
 {
-	let startMessageTemplate = options.startMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | Start";
-
-	let endMessageTemplate = options.endMessage ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | End | Status Code: {{ STATUS_CODE }}";
-
-	let requestNumber = 0;
-
-	return {
+	const logRequestMiddleware: CreateResult =
+	{
+		startMessageTemplate: options.startMessageTemplate ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | Start",
+		endMessageTemplate: options.endMessageTemplate ?? "[LogRequestMiddleware] Request {{ REQUEST_NUMBER }} | {{ IP }} | {{ HTTP_METHOD }} | {{ PATH }} | End | Status Code: {{ STATUS_CODE }}",
+		requestNumber: 0,
 		execute: async (context, next) =>
 		{
 			//
 			// Increment Request Number
 			//
 
-			requestNumber += 1;
+			logRequestMiddleware.requestNumber += 1;
 
 			//
 			// Start Log
 			//
 
-			const startMessage = startMessageTemplate
-				.replace("{{ REQUEST_NUMBER }}", requestNumber.toString())
+			const startMessage = logRequestMiddleware.startMessageTemplate
+				.replace("{{ REQUEST_NUMBER }}", logRequestMiddleware.requestNumber.toString())
 				.replace("{{ IP }}", context.fritterRequest.getIp())
 				.replace("{{ HTTP_METHOD }}", context.fritterRequest.getHttpMethod())
 				.replace("{{ PATH }}", context.fritterRequest.getPath());
@@ -66,8 +67,8 @@ export function create(options: CreateOptions = {}): CreateResult
 			// End Log
 			//
 
-			const endMessage = endMessageTemplate
-				.replace("{{ REQUEST_NUMBER }}", requestNumber.toString())
+			const endMessage = logRequestMiddleware.endMessageTemplate
+				.replace("{{ REQUEST_NUMBER }}", logRequestMiddleware.requestNumber.toString())
 				.replace("{{ IP }}", context.fritterRequest.getIp())
 				.replace("{{ HTTP_METHOD }}", context.fritterRequest.getHttpMethod())
 				.replace("{{ PATH }}", context.fritterRequest.getPath())
@@ -76,4 +77,6 @@ export function create(options: CreateOptions = {}): CreateResult
 			console.log(endMessage);
 		},
 	};
+
+	return logRequestMiddleware;
 }
