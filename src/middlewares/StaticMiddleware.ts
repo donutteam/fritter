@@ -124,7 +124,7 @@ export function create(options: CreateOptions): CreateResult
 			//
 
 			// Note: Uses posix, even on Windows, so paths always use forward slashes.
-			let requestedFilePath = path.posix.normalize(decodeURIComponent(context.fritterRequest.getPath() + "?" + context.fritterRequest.getSearchParams().toString()));
+			let requestedFilePath = path.posix.normalize(decodeURIComponent(context.fritterRequest.getPath()));
 
 			if (path.basename(requestedFilePath) == ".")
 			{
@@ -135,7 +135,7 @@ export function create(options: CreateOptions): CreateResult
 			// Get File Data from Cache
 			//
 
-			let file = staticMiddleware.fileDataCache[requestedFilePath];
+			let file = staticMiddleware.fileDataCache[requestedFilePath + "?" + context.fritterRequest.getSearchParams().toString()];
 
 			//
 			// Load File Data (if not cached)
@@ -211,7 +211,7 @@ export function create(options: CreateOptions): CreateResult
 						type: mimeTypes.lookup(onDiskFilePath) || "application/octet-stream",
 					};
 
-					staticMiddleware.fileDataCache[requestedFilePath] = file;
+					staticMiddleware.fileDataCache[requestedFilePath + "?" + context.fritterRequest.getSearchParams().toString()] = file;
 
 					break;
 				}
