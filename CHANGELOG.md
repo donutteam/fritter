@@ -9,6 +9,7 @@
 * refactor: made CurrentPageNumberMiddleware return its options
 * refactor: made ForceSslMiddleware return its options
 * refactor: made LogRequestMiddleware return its options
+* refactor: made RouterMiddleware return its options
 
 ## 2.1.0
 

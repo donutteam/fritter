@@ -12,7 +12,7 @@ export * as CorsMiddleware from "./middlewares/CorsMiddleware.js";
 export * as CurrentPageNumberMiddleware from "./middlewares/CurrentPageNumberMiddleware.js";
 export * as ForceSslMiddleware from "./middlewares/ForceSslMiddleware.js";
 export * as LogRequestMiddleware from "./middlewares/LogRequestMiddleware.js";
-export * as RouterMiddleware from "./middlewares/router.js";
+export * as RouterMiddleware from "./middlewares/RouterMiddleware.js";
 export * as StaticMiddleware from "./middlewares/static.js";
 
 export * from "./types/HTTPMethod.js";
