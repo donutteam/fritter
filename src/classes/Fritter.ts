@@ -44,7 +44,7 @@ export class Fritter
 	middlewareStack: MiddlewareFunction[];
 
 	/** The underlying Node.js HTTP server. */
-	httpServer: http.Server;
+	server: http.Server;
 
 	/** Constructs a new Fritter instance. */
 	constructor(options: FritterOptions = {})
@@ -65,14 +65,14 @@ export class Fritter
 	 */
 	async startHttp(port: number)
 	{
-		this.httpServer = http.createServer(this.#handleRequest.bind(this));
+		this.server = http.createServer(this.#handleRequest.bind(this));
 
 		return new Promise<void>(
 			(resolve, reject) =>
 			{
-				this.httpServer.listen(port, () => resolve());
+				this.server.listen(port, () => resolve());
 
-				this.httpServer.on("error", (error) => reject(error));
+				this.server.on("error", (error) => reject(error));
 			});
 	}
 
@@ -84,14 +84,14 @@ export class Fritter
 		return new Promise<void>(
 			(resolve, reject) =>
 			{
-				if (this.httpServer == null)
+				if (this.server == null)
 				{
 					resolve();
 
 					return;
 				}
 
-				this.httpServer.close((error) =>
+				this.server.close((error) =>
 				{
 					if (error)
 					{
