@@ -16,6 +16,7 @@
 * refactor: simplified tsconfig
 * refactor: changed Fritter class to create the server in its constructor
 * refactor: renamed Fritter class start/stop methods
+* feat: added SameOriginFrameMiddleware
 
 ## 2.1.0
 
