@@ -17,6 +17,7 @@
 * refactor: changed Fritter class to create the server in its constructor
 * refactor: renamed Fritter class start/stop methods
 * feat: added SameOriginFrameMiddleware
+* chore: removed unused zod dependency
 
 ## 2.1.0
 

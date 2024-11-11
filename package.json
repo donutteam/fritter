@@ -43,8 +43,7 @@
     "on-finished": "^2.4.1",
     "path-to-regexp": "^6.3.0",
     "type-is": "^1.6.18",
-    "vary": "^1.1.2",
-    "zod": "^3.23.8"
+    "vary": "^1.1.2"
   },
   "devDependencies": {
     "rimraf": "^6.0.1",
