@@ -1,5 +1,5 @@
-## Fritter
-An HTTP middleware framework for Node.js built with TypeScript to make it simple and fast to write web applications and APIs.
+# Fritter
+Fritter is a web framework for Node.js built with TypeScript to make it simple and fast to write web applications and APIs.
 
 Inspired by Koa, Fritter provides many of the same features while removing much of the ambiguity and providing type safety.
 
@@ -10,10 +10,8 @@ This library is mostly intended for use by Donut Team's web services, but it is 
 ## Installation
 Fritter is tested against the LTS version of Node.js. It may work in earlier versions, but we cannot offer any guarantees.
 
-Additionally, the `@donutteam/document-builder` package is required as a peer dependency. This package is used by a bundled middleware.
-
 ```
-npm install @donutteam/document-builder @donutteam/fritter
+npm install @donutteam/fritter
 ```
 
 ## License
