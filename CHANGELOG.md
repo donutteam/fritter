@@ -1,6 +1,7 @@
 ## 3.0.0
 
 * chore: updated packages
+* refactor: changed how the Fritter class stores its options
 
 ## 2.1.0
 

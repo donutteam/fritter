@@ -234,7 +234,7 @@ export class FritterRequest
 	{
 		if (this.#host === undefined)
 		{
-			if (this.fritter.options.trustProxyHeaders)
+			if (this.fritter.trustProxyHeaders)
 			{
 				this.#host = this.getHeaderValue("X-Forwarded-Host");
 			}
@@ -295,9 +295,9 @@ export class FritterRequest
 	{
 		if (this.#ips === undefined)
 		{
-			if (this.fritter.options.trustProxyHeaders)
+			if (this.fritter.trustProxyHeaders)
 			{
-				const forwardedForHeader = this.getHeaderValue(this.fritter.options.proxyIpHeaderName ?? "X-Forwarded-For");
+				const forwardedForHeader = this.getHeaderValue(this.fritter.proxyIpHeaderName);
 
 				if (forwardedForHeader != null)
 				{
@@ -340,7 +340,7 @@ export class FritterRequest
 			{
 				this.#protocol = "https";
 			}
-			else if (!this.fritter.options.trustProxyHeaders)
+			else if (!this.fritter.trustProxyHeaders)
 			{
 				this.#protocol = "http";
 			}
@@ -402,7 +402,7 @@ export class FritterRequest
 
 		return hostName.split(".")
 			.reverse()
-			.slice(this.fritter.options.subdomainOffset);
+			.slice(this.fritter.subdomainOffset);
 	}
 
 	/** A URL object representing the URL of the request. */

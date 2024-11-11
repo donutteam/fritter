@@ -19,21 +19,27 @@ import { isEmptyBodyStatusCode } from "../functions/is-empty-body-status-code.js
 /** Options for a Fritter instance. */
 export type FritterOptions =
 {
-	/** The name of the header containing one or more IP addresses of proxies. */
+	/** The name of the header containing one or more IP addresses of proxies. Optional, defaults to X-Forwarded-For. */
 	proxyIpHeaderName?: string;
 
-	/** The amount of segments in the hostname that are considered the base domain. */
+	/** The amount of segments in the hostname that are considered the base domain. Optional, defaults to 2. */
 	subdomainOffset?: number;
 
-	/** Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers. */
+	/** Whether to trust the X-Forwarded-For and X-Forwarded-Proto headers. Optional, defaults to false. */
 	trustProxyHeaders?: boolean;
 };
 
 /** A web server. */
 export class Fritter
 {
-	/** The options for this Fritter instance. */
-	options: FritterOptions;
+	/** The name of the header containing one or more IP addresses of proxies. */
+	proxyIpHeaderName: string;
+
+	/** The amount of segments in the hostname that are considered the base domain. */
+	subdomainOffset: number;
+
+	/** Whether to trust the proxy IP header. */
+	trustProxyHeaders: boolean;
 
 	/** The middleware stack. */
 	middlewareStack: MiddlewareFunction[];
@@ -47,9 +53,11 @@ export class Fritter
 	/** Constructs a new Fritter instance. */
 	constructor(options: FritterOptions = {})
 	{
-		options.trustProxyHeaders ??= false;
+		this.proxyIpHeaderName = options.proxyIpHeaderName ?? "X-Forwarded-For";
 
-		this.options = options;
+		this.subdomainOffset = options.subdomainOffset ?? 2;
+
+		this.trustProxyHeaders = options.trustProxyHeaders ?? false;
 
 		this.middlewareStack = [];
 	}
