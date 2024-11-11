@@ -2,7 +2,7 @@
 // Imports
 //
 
-import { isLocalIpAddress } from "@donutteam/utilities";
+import * as Utilities from "@donutteam/utilities";
 
 import { FritterContext } from "../classes/FritterContext.js";
 
@@ -43,7 +43,7 @@ export function create(options? : CreateOptions) : CreateResult
 				return await next();
 			}
 
-			if (allowLocalIpAddresses && isLocalIpAddress(context.fritterRequest.getIp()))
+			if (allowLocalIpAddresses && Utilities.NetworkLib.isLocalIp(context.fritterRequest.getIp()))
 			{
 				return await next();
 			}

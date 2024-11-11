@@ -1,3 +1,7 @@
+## 3.0.0
+
+* chore: updated packages
+
 ## 2.1.0
 
 * Added an `addRoute` function to the `RouterMiddleware` to manually add a route.
