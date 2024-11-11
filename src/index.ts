@@ -7,7 +7,7 @@ export * from "./classes/FritterContext.js";
 export * from "./classes/FritterRequest.js";
 export * from "./classes/FritterResponse.js";
 
-export * as BodyParserMiddleware from "./middlewares/BodyParser.js";
+export * as BodyParserMiddleware from "./middlewares/BodyParserMiddleware.js";
 export * as CorsMiddleware from "./middlewares/CorsMiddleware.js";
 export * as CurrentPageNumberMiddleware from "./middlewares/CurrentPageNumberMiddleware.js";
 export * as ForceSslMiddleware from "./middlewares/ForceSslMiddleware.js";
