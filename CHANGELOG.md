@@ -7,6 +7,7 @@
 * refactor: removed local utility functions
 * refactor: made CorsMiddleware return its options
 * refactor: made CurrentPageNumberMiddleware return its options
+* refactor: made ForceSslMiddleware return its options
 
 ## 2.1.0
 

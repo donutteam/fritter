@@ -21,14 +21,16 @@ export type CreateOptions =
 
 export type CreateResult =
 {
+	allowInsecureLocalIpAddresses: boolean;
 	execute: MiddlewareFunction<MiddlewareFritterContext>;
 };
 
 export function create(options?: CreateOptions): CreateResult
 {
-	const allowLocalIpAddresses = options?.allowInsecureLocalIpAddresses ?? false;
+	const forceSslMiddleware: CreateResult =
+	{
+		allowInsecureLocalIpAddresses: options?.allowInsecureLocalIpAddresses ?? false,
 
-	return {
 		execute: async (context, next) =>
 		{
 			if (context.fritterRequest.isSecure())
@@ -36,7 +38,7 @@ export function create(options?: CreateOptions): CreateResult
 				return await next();
 			}
 
-			if (allowLocalIpAddresses && Utilities.NetworkLib.isLocalIp(context.fritterRequest.getIp()))
+			if (forceSslMiddleware.allowInsecureLocalIpAddresses && Utilities.NetworkLib.isLocalIp(context.fritterRequest.getIp()))
 			{
 				return await next();
 			}
@@ -48,4 +50,6 @@ export function create(options?: CreateOptions): CreateResult
 			context.fritterResponse.setRedirect(url.toString());
 		},
 	};
+
+	return forceSslMiddleware;
 }
