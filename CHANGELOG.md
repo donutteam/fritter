@@ -2,6 +2,7 @@
 
 * chore: updated packages
 * refactor: changed how the Fritter class stores its options
+* refactor: removed support for https server
 
 ## 2.1.0
 

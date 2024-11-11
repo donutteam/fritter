@@ -3,7 +3,6 @@
 //
 
 import http from "node:http";
-import https from "node:https";
 import stream from "node:stream";
 
 import { FritterContext } from "./FritterContext.js";
@@ -47,9 +46,6 @@ export class Fritter
 	/** The underlying Node.js HTTP server. */
 	httpServer: http.Server;
 
-	/** An HTTPS server. */
-	httpsServer: https.Server;
-
 	/** Constructs a new Fritter instance. */
 	constructor(options: FritterOptions = {})
 	{
@@ -81,25 +77,6 @@ export class Fritter
 	}
 
 	/**
-	 * Starts an HTTPS server on the specified port.
-	 *
-	 * @param port
-	 * @param options
-	 */
-	async startHttps(port: number, options: https.ServerOptions)
-	{
-		this.httpsServer = https.createServer(options, this.#handleRequest.bind(this));
-
-		return new Promise<void>(
-			(resolve, reject) =>
-			{
-				this.httpsServer.listen(port, () => resolve());
-
-				this.httpsServer.on("error", (error) => reject(error));
-			});
-	}
-
-	/**
 	 * Stops the HTTP server.
 	 */
 	async stopHttp()
@@ -115,35 +92,6 @@ export class Fritter
 				}
 
 				this.httpServer.close((error) =>
-				{
-					if (error)
-					{
-						reject(error);
-					}
-					else
-					{
-						resolve();
-					}
-				});
-			});
-	}
-
-	/**
-	 * Stops the HTTPS server.
-	 */
-	async stopHttps()
-	{
-		return new Promise<void>(
-			(resolve, reject) =>
-			{
-				if (this.httpsServer == null)
-				{
-					resolve();
-
-					return;
-				}
-
-				this.httpsServer.close((error) =>
 				{
 					if (error)
 					{
