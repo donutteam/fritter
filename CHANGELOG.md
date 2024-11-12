@@ -1,3 +1,7 @@
+## 3.0.2
+
+* refactor: extended @donutteam/typescript-config
+
 ## 3.0.1
 
 * docs: updated readme

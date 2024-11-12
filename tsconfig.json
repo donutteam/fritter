@@ -1,22 +1,17 @@
 {
+	"extends": "@donutteam/typescript-config",
 	"compilerOptions":
 	{
 		"rootDir": "./src",
 		"outDir": "./build",
 
-		"declaration": true,
 		"lib":
 		[
-			"esnext",
+			"ESNext",
 		],
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
-		"strict": true,
 
-		// Disabled because FritterRequest and FritterResponse intentionally have uninitialised private properties
+		// Note: Disabled because FritterRequest and FritterResponse intentionally have uninitialised private properties.
 		"strictPropertyInitialization": false,
-
-		"target": "ESNext",
 	},
 	"include":
 	[
