@@ -1,3 +1,7 @@
+## 3.0.3
+
+* fix: moved @donutteam/typescript-config to devDependencies
+
 ## 3.0.2
 
 * refactor: extended @donutteam/typescript-config
