@@ -3,11 +3,14 @@
 // Imports
 //
 
-import { IncomingMessage } from "node:http";
+import fs from "node:fs";
+import http from "node:http";
 
 import Formidable from "formidable";
+import mimeTypes from "mime-types";
 
 import { FritterContext } from "../classes/FritterContext.js";
+import { FritterFile } from "../classes/FritterFile.js";
 
 import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
@@ -15,7 +18,7 @@ import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 // Locals
 //
 
-async function getBody(incomingMessage: IncomingMessage)
+async function getBody(incomingMessage: http.IncomingMessage)
 {
 	return new Promise<string>(
 		(resolve, reject) =>
@@ -34,7 +37,28 @@ async function getBody(incomingMessage: IncomingMessage)
 		});
 }
 
-async function parseFormData(nodeRequest: IncomingMessage, formidableOptions: Formidable.Options): Promise<RequestBody>
+async function formidableFileToFritterFile(formidableFile: Formidable.File): Promise<FritterFile>
+{
+	let mimeType = "application/octet-stream";
+
+	if (formidableFile.originalFilename != null)
+	{
+		mimeType = mimeTypes.lookup(formidableFile.originalFilename) || "application/octet-stream";
+	}
+
+	const stats = await fs.promises.stat(formidableFile.filepath);
+
+	return new FritterFile(
+		{
+			path: formidableFile.filepath,
+			size: formidableFile.size,
+			fileName: formidableFile.originalFilename ?? formidableFile.newFilename,
+			mimeType,
+			modifiedDate: stats.mtime,
+		});
+}
+
+async function parseFormData(nodeRequest: http.IncomingMessage, formidableOptions: Formidable.Options): Promise<RequestBody>
 {
 	const formidable = Formidable(formidableOptions);
 
@@ -59,7 +83,7 @@ async function parseFormData(nodeRequest: IncomingMessage, formidableOptions: Fo
 		}
 	}
 
-	const files: Record<string, File | File[]> = {};
+	const files: Record<string, FritterFile | FritterFile[]> = {};
 
 	for (const [ key, value ] of Object.entries(formidableFiles))
 	{
@@ -70,11 +94,20 @@ async function parseFormData(nodeRequest: IncomingMessage, formidableOptions: Fo
 
 		if (value.length == 1)
 		{
-			files[key] = new File(value[0]!);
+			files[key] = await formidableFileToFritterFile(value[0]!);
 		}
 		else
 		{
-			files[key] = value.map((file) => new File(file));
+			const fritterFiles: FritterFile[] = [];
+
+			for (const file of value)
+			{
+				const fritterFile = await formidableFileToFritterFile(file);
+
+				fritterFiles.push(fritterFile);
+			}
+
+			files[key] = fritterFiles;
 		}
 	}
 	
@@ -84,7 +117,7 @@ async function parseFormData(nodeRequest: IncomingMessage, formidableOptions: Fo
 	};
 }
 
-async function parseJson(nodeRequest: IncomingMessage): Promise<RequestBody>
+async function parseJson(nodeRequest: http.IncomingMessage): Promise<RequestBody>
 {
 	const bodyString = await getBody(nodeRequest);
 
@@ -103,40 +136,6 @@ async function parseJson(nodeRequest: IncomingMessage): Promise<RequestBody>
 //
 
 export type RequestBody = Record<string, unknown>;
-
-//
-// Classes
-//
-
-export class File
-{
-	path: string;
-	
-	size: number;
-
-	originalFileName: string | null;
-
-	newFileName: string;
-
-	mimeType: string | null;
-
-	modifiedDate: Date | null;
-
-	constructor(formidableFile: Formidable.File)
-	{
-		this.path = formidableFile.filepath;
-
-		this.size = formidableFile.size;
-
-		this.originalFileName = formidableFile.originalFilename;
-
-		this.newFileName = formidableFile.newFilename;
-
-		this.mimeType = formidableFile.mimetype;
-
-		this.modifiedDate = formidableFile.mtime ?? null;
-	}
-}
 
 //
 // Create Function

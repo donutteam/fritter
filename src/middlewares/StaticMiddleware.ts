@@ -10,6 +10,7 @@ import isCompressible from "compressible";
 import mimeTypes from "mime-types";
 
 import { FritterContext } from "../classes/FritterContext.js";
+import { FritterFile } from "../classes/FritterFile.js";
 
 import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 
@@ -23,16 +24,7 @@ export type Directory =
 	path: string;
 };
 
-export type File =
-{
-	onDiskFilePath: string;
-	modifiedDate: Date;
-	size: number;
-	rawStats: fs.Stats;
-	type: string;
-};
-
-export type FileDataCache = Record<string, File>;
+export type FileDataCache = Record<string, FritterFile>;
 
 //
 // Middleware
@@ -74,7 +66,7 @@ export function create(options: CreateOptions): CreateResult
 
 			if (file != null)
 			{
-				return filePath + "?mtime=" + file.rawStats.mtimeMs;
+				return filePath + "?mtime=" + file.modifiedDate.getTime();
 			}
 
 			for (const directory of staticMiddleware.directories)
@@ -135,7 +127,11 @@ export function create(options: CreateOptions): CreateResult
 			// Get File Data from Cache
 			//
 
-			let file = staticMiddleware.fileDataCache[requestedFilePath + "?" + context.fritterRequest.getSearchParams().toString()];
+			const fileDataCacheKey = 
+				requestedFilePath + "?" + 
+				context.fritterRequest.getSearchParams().toString();
+
+			let file = staticMiddleware.fileDataCache[fileDataCacheKey];
 
 			//
 			// Load File Data (if not cached)
@@ -202,16 +198,16 @@ export function create(options: CreateOptions): CreateResult
 					// Create File Data
 					//
 
-					file =
-					{
-						onDiskFilePath,
-						modifiedDate: stats.mtime,
-						size: stats.size,
-						rawStats: stats,
-						type: mimeTypes.lookup(onDiskFilePath) || "application/octet-stream",
-					};
+					file = new FritterFile(
+						{
+							path: onDiskFilePath,
+							fileName: path.basename(onDiskFilePath),
+							size: stats.size,
+							mimeType: mimeTypes.lookup(onDiskFilePath) || "application/octet-stream",
+							modifiedDate: stats.mtime,
+						});
 
-					staticMiddleware.fileDataCache[requestedFilePath + "?" + context.fritterRequest.getSearchParams().toString()] = file;
+					staticMiddleware.fileDataCache[fileDataCacheKey] = file;
 
 					break;
 				}
@@ -226,17 +222,15 @@ export function create(options: CreateOptions): CreateResult
 			// Check On Disk File Modified Date
 			//
 
-			const stats = await fs.promises.stat(file.onDiskFilePath);
+			const stats = await fs.promises.stat(file.path);
 
-			if (stats.mtimeMs != file.rawStats.mtimeMs)
+			if (stats.mtimeMs != file.modifiedDate.getTime())
 			{
 				file.modifiedDate = stats.mtime;
 
 				file.size = stats.size;
 
-				file.rawStats = stats;
-
-				file.type = mimeTypes.lookup(file.onDiskFilePath) || "application/octet-stream";
+				file.mimeType = mimeTypes.lookup(file.path) || "application/octet-stream";
 			}
 
 			//
@@ -259,7 +253,7 @@ export function create(options: CreateOptions): CreateResult
 				return;
 			}
 
-			context.fritterResponse.setContentType(file.type);
+			context.fritterResponse.setContentType(file.mimeType);
 
 			context.fritterResponse.setContentLength(file.size);
 
@@ -270,13 +264,13 @@ export function create(options: CreateOptions): CreateResult
 				return;
 			}
 
-			const readStream = fs.createReadStream(file.onDiskFilePath);
+			const readStream = fs.createReadStream(file.path);
 
 			context.fritterResponse.setBody(readStream);
 
 			const acceptsGzip = context.fritterRequest.getAccepts().encoding("gzip") != null;
 
-			const shouldGzip = staticMiddleware.enableGzip && file.size > 1024 && isCompressible(file.type);
+			const shouldGzip = staticMiddleware.enableGzip && file.size > 1024 && isCompressible(file.mimeType);
 
 			if (acceptsGzip && shouldGzip)
 			{

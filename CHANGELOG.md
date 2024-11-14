@@ -1,3 +1,7 @@
+## 4.0.0
+
+* refactor: added FritterFile class to replace BodyParserMiddleware.File and StaticMiddleware.File
+
 ## 3.0.3
 
 * fix: moved @donutteam/typescript-config to devDependencies
