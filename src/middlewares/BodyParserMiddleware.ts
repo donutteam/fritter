@@ -117,18 +117,16 @@ async function parseFormData(nodeRequest: http.IncomingMessage, formidableOption
 	};
 }
 
-async function parseJson(nodeRequest: http.IncomingMessage): Promise<RequestBody>
+async function parseJson(rawRequestBody: string): Promise<RequestBody>
 {
-	const bodyString = await getBody(nodeRequest);
+	const requestBody = JSON.parse(rawRequestBody);
 
-	const bodyData = JSON.parse(bodyString);
-
-	if (bodyData == null || typeof bodyData !== "object" || Array.isArray(bodyData))
+	if (requestBody == null || typeof requestBody !== "object" || Array.isArray(requestBody))
 	{
 		throw new Error("Invalid JSON body.");
 	}
 
-	return bodyData;
+	return requestBody;
 }
 
 //
@@ -143,6 +141,7 @@ export type RequestBody = Record<string, unknown>;
 
 export type MiddlewareFritterContext = FritterContext &
 {
+	getRawRequestBody: () => Promise<string>;
 	getRequestBody: () => Promise<RequestBody>;
 };
 
@@ -166,7 +165,26 @@ export function create(options: CreateOptions = {}): CreateResult
 
 		execute: async (context, next) =>
 		{
+			let rawRequestBody: string | null = null;
+
 			let requestBody: RequestBody | null = null;
+
+			context.getRawRequestBody = async () =>
+			{
+				if (context.fritterRequest.getContentType() != "application/json")
+				{
+					throw new Error("Raw request body is only available for JSON requests.");
+				}
+
+				if (rawRequestBody != null)
+				{
+					return rawRequestBody;
+				}
+
+				rawRequestBody = await getBody(context.fritterRequest.nodeRequest);
+
+				return rawRequestBody;
+			};
 
 			context.getRequestBody = async () =>
 			{
@@ -189,7 +207,9 @@ export function create(options: CreateOptions = {}): CreateResult
 
 					case "application/json":
 					{
-						requestBody = await parseJson(context.fritterRequest.nodeRequest);
+						rawRequestBody = rawRequestBody ?? await getBody(context.fritterRequest.nodeRequest);
+
+						requestBody = await parseJson(rawRequestBody);
 
 						break;
 					}

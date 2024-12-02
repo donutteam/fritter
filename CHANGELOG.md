@@ -1,3 +1,7 @@
+## 4.1.0
+
+* feat: added context.getRawRequestBody() to get the raw request body on JSON requests when using the BodyParserMiddleware
+
 ## 4.0.0
 
 * refactor: added FritterFile class to replace BodyParserMiddleware.File and StaticMiddleware.File
