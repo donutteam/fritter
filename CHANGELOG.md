@@ -1,3 +1,10 @@
+# Changelog
+## 4.2.0
+
+* refactor: removed "Middleware" from middleware file names
+* refactor: deprecated PossibleJsonData type
+	* It's not used anymore but I don't want to remove it in a non-major version
+
 ## 4.1.0
 
 * feat: added context.getRawRequestBody() to get the raw request body on JSON requests when using the BodyParserMiddleware
