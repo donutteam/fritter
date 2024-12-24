@@ -1,4 +1,8 @@
 # Changelog
+## 4.2.1
+
+* fix: fixed CurrentPageNumberMiddleware generic types to not require a type argument
+
 ## 4.2.0
 
 * refactor: removed "Middleware" from middleware file names

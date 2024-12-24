@@ -10,7 +10,7 @@ import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 // Middleware
 //
 
-export type MiddlewareFritterContext<T> = FritterContext &
+export type MiddlewareFritterContext<T = null> = FritterContext &
 {
 	currentPageNumber: number;
 	getPagination: () => T;
@@ -22,7 +22,7 @@ export type CreateOptions<T = null> =
 	getPagination?: (context: MiddlewareFritterContext<T>) => T;
 };
 
-export type CreateResult<T> =
+export type CreateResult<T = null> =
 {
 	getPageNumber: (context: MiddlewareFritterContext<T>) => number;
 	getPagination: (context: MiddlewareFritterContext<T>) => T;
