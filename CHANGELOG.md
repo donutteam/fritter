@@ -4,6 +4,7 @@
 * refactor: removed "Middleware" from middleware file names
 * refactor: deprecated PossibleJsonData type
 	* It's not used anymore but I don't want to remove it in a non-major version
+* feat: added the ability to provide a getPagination function to the CurrentPageNumberMiddleware
 
 ## 4.1.0
 
