@@ -1,6 +1,6 @@
 {
   "name": "@donutteam/fritter",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "A web framework.",
   "main": "./build/index.js",
   "scripts": {
