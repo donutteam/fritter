@@ -1,4 +1,8 @@
 # Changelog
+## 4.2.2
+
+* fix: refactored the getPagination feature to actually be usable
+
 ## 4.2.1
 
 * fix: fixed CurrentPageNumberMiddleware generic types to not require a type argument

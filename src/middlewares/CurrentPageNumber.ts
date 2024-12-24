@@ -13,19 +13,19 @@ import { MiddlewareFunction } from "../types/MiddlewareFunction.js";
 export type MiddlewareFritterContext<T = null> = FritterContext &
 {
 	currentPageNumber: number;
-	getPagination: () => T;
+	getPagination: (totalPageCount: number) => T;
 };
 
 export type CreateOptions<T = null> =
 {
 	getPageNumber?: (context: MiddlewareFritterContext<T>) => number;
-	getPagination?: (context: MiddlewareFritterContext<T>) => T;
+	getPagination?: (context: MiddlewareFritterContext<T>, totalPageCount: number) => T;
 };
 
 export type CreateResult<T = null> =
 {
 	getPageNumber: (context: MiddlewareFritterContext<T>) => number;
-	getPagination: (context: MiddlewareFritterContext<T>) => T;
+	getPagination: (context: MiddlewareFritterContext<T>, totalPageCount: number) => T;
 	execute: MiddlewareFunction<MiddlewareFritterContext<T>>;
 };
 
@@ -49,7 +49,7 @@ export function create<T = null>(options: CreateOptions<T> = {}): CreateResult<T
 
 			context.currentPageNumber = currentPageNumber;
 
-			context.getPagination = () => currentPageNumberMiddleware.getPagination(context);
+			context.getPagination = (totalPageCount) => currentPageNumberMiddleware.getPagination(context, totalPageCount);
 
 			await next();
 		},
