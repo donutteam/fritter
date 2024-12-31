@@ -77,11 +77,11 @@ export function create(options: CreateOptions): CreateResult
 					{
 						continue;
 					}
-
-					filePath = filePath.slice(directory.mountPath.length);
 				}
 
-				const onDiskPath = path.join(directory.path, filePath);
+				const onDiskPath = path.join(directory.path, directory.mountPath != null
+					? filePath.slice(directory.mountPath.length)
+					: filePath);
 
 				try
 				{

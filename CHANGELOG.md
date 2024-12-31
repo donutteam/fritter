@@ -1,4 +1,8 @@
 # Changelog
+## 4.2.3
+
+* fix: fixed getCacheBustedPath not working with mountPaths
+
 ## 4.2.2
 
 * fix: refactored the getPagination feature to actually be usable
