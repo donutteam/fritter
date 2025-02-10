@@ -1,4 +1,8 @@
 # Changelog
+## 4.2.4
+
+* chore: minor dependency updates
+
 ## 4.2.3
 
 * fix: fixed getCacheBustedPath not working with mountPaths
