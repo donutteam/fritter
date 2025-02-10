@@ -15,4 +15,4 @@ npm install @donutteam/fritter
 ```
 
 ## License
-[MIT](https://github.com/donutteam/npm-fritter/blob/main/LICENSE.md)
+[MIT](https://github.com/donutteam/fritter/blob/main/LICENSE.md)
